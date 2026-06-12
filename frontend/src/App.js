@@ -1,12 +1,17 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react'
+import "./App.css";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import LoginPage from './pages/Login';
 
-function App() {
+const App = () => {
   return (
-    <div className="h-screen flex items-center justify-center text-3xl font-bold text-red-600">
-      Tailwind is working 🚀
-    </div>
-  );
+    <BrowserRouter>
+    <Routes>
+      <Route path="/login" element={<LoginPage />} />
+    </Routes>
+
+    </BrowserRouter>
+  )
 }
 
-export default App;
+export default App
