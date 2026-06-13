@@ -1,5 +1,5 @@
 import LoginPage from "../pages/Login";
-// import SignupPage from "../pages/SignupPage";
+import SignupPage from "../pages/SignupPage";
 // import ActivationPage from "../pages/ActivationPage";
 // import HomePage from "../pages/HomePage";
 // import ProductsPage from "../pages/ProductsPage";
@@ -20,7 +20,7 @@ import LoginPage from "../pages/Login";
 
 export { 
     LoginPage,
-    // SignupPage,
+    SignupPage,
     // ActivationPage,
     // HomePage,
     // ProductsPage,
