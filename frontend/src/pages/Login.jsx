@@ -1,6 +1,5 @@
 import React from 'react'
-import Login from '../components/Login/Login'
-
+import Login from "../components/Login/Login.jsx";
 
 const LoginPage = () => {
   return (
@@ -10,4 +9,4 @@ const LoginPage = () => {
   )
 }
 
-export default LoginPage
+export default LoginPage;
