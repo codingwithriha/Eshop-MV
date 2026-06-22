@@ -14,6 +14,7 @@ body {
     Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
     background: #F6F6F5;
     scroll-behavior: smooth;
+    user-select: none;
 }
 input,select{
   outline: none;
@@ -30,15 +31,4 @@ input,select{
   right: -24%;
   top: -9%;
   cursor: pointer;
-}
-/* Chrome, Safari, Edge, Opera */
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-/* Firefox */
-input[type=number] {
-  -moz-appearance: textfield;
 }
