@@ -10,7 +10,7 @@ import {
   BestSellingPage,
   EventsPage,
   FAQPage,
-} from "./Routes.js";
+} from "./routes/Routes.js";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Store from "./redux/store";

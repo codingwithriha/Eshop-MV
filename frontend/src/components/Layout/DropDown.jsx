@@ -15,7 +15,7 @@ const DropDown = ({ categoriesData, setDropDown }) => {
         categoriesData.map((i, index) => (
           <div
             key={index}
-            className={`${styles.noramlFlex}`}
+            className={`${styles.normalFlex}`}
             onClick={() => submitHandle(i)}
           >
             <img
