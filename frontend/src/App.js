@@ -26,12 +26,12 @@ import {
   ShopLoginPage,
 } from "./routes/Routes.js";
 import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/React-Toastify.css";
+import "react-toastify/dist/ReactToastify.css";
 import Store from "./redux/store";
 import { loadSeller, loadUser } from "./redux/actions/user";
 import { useSelector } from "react-redux";
 import ProtectedRoute from "./routes/ProtectedRoute.js";
-import { ShopHomePage } from "./ShopRoutes.js";
+import { ShopHomePage } from "./routes/ShopRoutes";
 import SellerProtectedRoute from "./routes/SellerProtectedRoute.js";
 
 const App = () => {
