@@ -14,7 +14,7 @@ import DropDown from "./DropDown";
 import Navbar from "./Navbar";
 import { useSelector } from "react-redux";
 import { backend_url } from "../../server";
-import Cart from "../cart/Cart";
+import Cart from "../Cart/Cart.jsx";
 import Wishlist from "../Wishlist/Wishlist";
 import { RxCross1 } from "react-icons/rx";
 
