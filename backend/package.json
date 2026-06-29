@@ -10,7 +10,7 @@
     "dev": "nodemon server.js",
     "start": "node server.js"
   },
-  "author": "shahriar Sajeeb",
+  "author": "Codingwithriha",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.1.0",
