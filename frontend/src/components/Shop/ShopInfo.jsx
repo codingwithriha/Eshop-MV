@@ -24,7 +24,7 @@ const ShopInfo = ({ isOwner }) => {
       console.log(error);
       setIsLoading(false);
     })
-  }, [])
+  }, [dispatch, id]);
   
 
   const logoutHandler = async () => {

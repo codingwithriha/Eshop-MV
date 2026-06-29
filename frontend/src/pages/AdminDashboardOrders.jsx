@@ -8,13 +8,13 @@ import { getAllOrdersOfAdmin } from "../redux/actions/order";
 const AdminDashboardOrders = () => {
   const dispatch = useDispatch();
 
-  const { adminOrders, adminOrderLoading } = useSelector(
+  const { adminOrders } = useSelector(
     (state) => state.order
   );
 
   useEffect(() => {
     dispatch(getAllOrdersOfAdmin());
-  }, []);
+  }, [dispatch]);
 
   const columns = [
     { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },

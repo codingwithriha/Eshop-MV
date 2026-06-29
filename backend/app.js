@@ -5,10 +5,24 @@ const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 
-app.use(cors({
-  origin: ['https://eshop-tutorial-pyri.vercel.app',],
-  credentials: true
-}));
+const allowedOrigins = [
+  "http://localhost:3000",
+  "http://127.0.0.1:3000",
+  process.env.FRONTEND_URL,
+].filter(Boolean);
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error(`CORS blocked for origin: ${origin}`));
+      }
+    },
+    credentials: true,
+  })
+);
 
 app.use(express.json());
 app.use(cookieParser());
@@ -18,17 +32,17 @@ app.use("/test", (req, res) => {
 
 app.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
 
-// config
-if (process.env.NODE_ENV !== "PRODUCTION") {
-  require("dotenv").config({
-    path: "config/.env",
-  });
-}
+const path = require("path");
+
+// config — platform env vars take precedence over .env file
+require("dotenv").config({
+  path: path.join(__dirname, "config", ".env"),
+});
 
 app.get("/", (req, res) => {
   res.status(200).json({
     success: true,
-    message: "Backend is running successfully 🚀"
+    message: "Backend is running successfully 🚀",
   });
 });
 

@@ -15,7 +15,7 @@ const AllRefundOrders = () => {
 
   useEffect(() => {
     dispatch(getAllOrdersOfShop(seller._id));
-  }, [dispatch]);
+  }, [dispatch, seller._id]);
 
   const refundOrders = orders && orders.filter((item) => item.status === "Processing refund"  || item.status === "Refund Success");
 

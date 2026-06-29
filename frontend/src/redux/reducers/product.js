@@ -55,6 +55,7 @@ export const productReducer = createReducer(initialState, {
   },
   getAllProductsFailed: (state, action) => {
     state.isLoading = false;
+    state.allProducts = [];
     state.error = action.payload;
   },
   

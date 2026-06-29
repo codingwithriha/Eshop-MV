@@ -2,14 +2,15 @@ import axios from "axios";
 import React, { useRef, useState } from "react";
 import { useEffect } from "react";
 import { server } from "../../server";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineArrowRight, AiOutlineSend } from "react-icons/ai";
 import styles from "../../styles/styles";
 import { TfiGallery } from "react-icons/tfi";
 import socketIO from "socket.io-client";
 import { format } from "timeago.js";
-const ENDPOINT = "https://socket-ecommerce-tu68.onrender.com/";
+const ENDPOINT =
+  process.env.REACT_APP_SOCKET_URL || "http://localhost:4000";
 const socketId = socketIO(ENDPOINT, { transports: ["websocket"] });
 
 const DashboardMessages = () => {
@@ -22,7 +23,7 @@ const DashboardMessages = () => {
   const [newMessage, setNewMessage] = useState("");
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [activeStatus, setActiveStatus] = useState(false);
-  const [images, setImages] = useState();
+  const [, setImages] = useState();
   const [open, setOpen] = useState(false);
   const scrollRef = useRef(null);
 
@@ -272,7 +273,7 @@ const MessageList = ({
   const [active, setActive] = useState(0);
 
   useEffect(() => {
-    const userId = data.members.find((user) => user != me);
+    const userId = data.members.find((user) => user !== me);
 
     const getUser = async () => {
       try {
@@ -379,6 +380,7 @@ const SellerInbox = ({
                   <img
                     src={`${item.images?.url}`}
                     className="w-[300px] h-[300px] object-cover rounded-[10px] mr-2"
+                    alt="Message attachment"
                   />
                 )}
                 {item.text !== "" && (
@@ -403,7 +405,6 @@ const SellerInbox = ({
 
       {/* send message input */}
       <form
-        aria-required={true}
         className="p-3 relative w-full flex justify-between items-center"
         onSubmit={sendMessageHandler}
       >
