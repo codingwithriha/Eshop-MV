@@ -3,3 +3,5 @@
 *.env
 config/.env
 backend/config/.env
+
+./uploads

@@ -25,6 +25,13 @@ if (process.env.NODE_ENV !== "PRODUCTION") {
   });
 }
 
+app.get("/", (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "Backend is running successfully 🚀"
+  });
+});
+
 // import routes
 const user = require("./controller/user");
 const shop = require("./controller/shop");
