@@ -4,7 +4,7 @@
 
 ### A Multi-Vendor E-Commerce Platform built with the MERN Stack
 
-A full-featured marketplace where independent sellers run their own shops, buyers shop across a unified storefront, and admins oversee the entire platform — complete with real-time chat, Stripe payments, and seller analytics.
+A full-featured marketplace where independent sellers run their own shops, buyers shop across a unified storefront, and admins oversee the entire platform complete with real-time chat, Stripe payments, and seller analytics.
 
 [![Live Demo](https://img.shields.io/badge/Live-Demo-2E5C8A?style=for-the-badge)](https://eshop-mv.vercel.app/)
 ![MERN Stack](https://img.shields.io/badge/Stack-MERN-61DAFB?style=for-the-badge&logo=mongodb&logoColor=white)
@@ -14,26 +14,24 @@ A full-featured marketplace where independent sellers run their own shops, buyer
 
 </div>
 
----
 
 ## 📖 Overview
 
 **Eshop-MV** is a multi-vendor e-commerce marketplace where independent sellers can register their own shops, list products, run promotional events, and manage orders — while buyers shop across a single unified storefront with cart, wishlist, checkout, and order tracking.
 
-What sets it apart from a typical single-seller store is the three-role architecture: **buyers**, **sellers**, and **admins** each get their own permissions, dashboards, and views over a shared product and order pipeline. The codebase is split into three independently deployable services — a REST API, a React client, and a standalone real-time service — mirroring how production e-commerce platforms are actually structured.
+What sets it apart from a typical single seller store is the three-role architecture: **buyers**, **sellers**, and **admins** each get their own permissions, dashboards, and views over a shared product and order pipeline. The codebase is split into three independently deployable services a REST API, a React client, and a standalone real-time service mirroring how production e-commerce platforms are actually structured.
 
----
 
 ## ✨ Key Features
 
 ### 👥 Multi-Role User System
-- **Buyer** — browse, search, wishlist, cart, checkout, track orders, leave reviews
-- **Seller** — manage products, events, orders, coupons, and earnings from a dedicated dashboard
-- **Admin** — oversee all users, sellers, products, events, and withdrawal requests platform-wide
+- **Buyer** browse, search, wishlist, cart, checkout, track orders, leave reviews
+- **Seller** manage products, events, orders, coupons, and earnings from a dedicated dashboard
+- **Admin** oversee all users, sellers, products, events, and withdrawal requests platform-wide
 
 ### 🛒 Shopping Experience
 - Product listings with image uploads via **Cloudinary**
-- Category-based search and filtering
+- Category based search and filtering
 - Persistent cart and wishlist (Redux Toolkit)
 - Multi-step checkout flow
 
@@ -86,7 +84,6 @@ The project is split into **three independently deployable services**:
 
 **Why three services?** Serverless platforms like Vercel aren't built to hold persistent WebSocket connections, so the real-time chat/notification layer runs as its own service on a platform that supports long-lived processes, independent of the main API.
 
----
 
 ## 🧰 Tech Stack
 
@@ -133,7 +130,6 @@ The project is split into **three independently deployable services**:
 </tr>
 </table>
 
----
 
 ## 📁 Project Structure
 
@@ -162,7 +158,6 @@ Eshop-MV/
     └── index.js          → standalone Socket.IO server for chat & notifications
 ```
 
----
 
 ## 🚀 Getting Started
 
@@ -244,18 +239,17 @@ The app should now be running locally:
 - Frontend → `http://localhost:3000`
 - Backend API → `http://localhost:8000`
 
----
 
 ## 🌐 Deployment
 
 | Service | Platform | Notes |
 |---|---|---|
-| Frontend | [Vercel](https://vercel.com) | Set `REACT_APP_BACKEND_URL` to your deployed backend URL |
-| Backend API | [Render](https://render.com) | Set root directory to `backend`, add all `.env` variables |
-| Socket Server | [Render](https://render.com) | Set root directory to `socket` |
+| Frontend | [Vercel](https://eshop-mv.vercel.app/) | Set `REACT_APP_BACKEND_URL` to your deployed backend URL |
+| Backend API | [Railway](https://eshop-mv-production.up.railway.app/) | Set root directory to `backend`, add all `.env` variables |
+| Socket Server | [Railway](https://eshop-mv-socket.up.railway.app) | Set root directory to `socket` |
 | Database | [MongoDB Atlas](https://www.mongodb.com/atlas) | Whitelist Render's IP or allow access from anywhere |
 
-> **Note:** Environment variables do **not** carry over from local development to hosted platforms — they must be added manually in each service's dashboard.
+> **Note:** Environment variables do **not** carry over from local development to hosted platforms they must be added manually in each service's dashboard.
 
 ---
 
@@ -276,7 +270,6 @@ The app should now be running locally:
 - [ ] Containerization with Docker for local dev parity
 - [ ] Unit & integration test coverage
 
----
 
 ## 📄 License
 
@@ -286,6 +279,6 @@ This project is built for educational purposes, based on the Becodemy Multi-Vend
 
 <div align="center">
 
-Built with ❤️ using the MERN Stack
+Built with ❤️ by codingwithriha
 
 </div>
