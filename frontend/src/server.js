@@ -1,5 +1,5 @@
 const API_BASE =
-  process.env.REACT_APP_API_URL || "http://localhost:8000";
+  process.env.REACT_APP_API_URL || "https://eshop-mv-production.up.railway.app/";
 
 export const server = `${API_BASE}/api/v2`;
 
