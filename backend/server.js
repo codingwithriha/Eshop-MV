@@ -1,42 +1,40 @@
 const app = require("./app");
-const connectDatabase = require("./db/Database");
-const cloudinary = require("cloudinary");
-
-// Handling uncaught Exception
-process.on("uncaughtException", (err) => {
-  console.log(`Error: ${err.message}`);
-  console.log(`shutting down the server for handling uncaught exception`);
+const dbConnection = require("./db/Database");
+const cloudinary=require('cloudinary')
+//Handling uncaugth Exception
+process.on("uncaughtException", (error) => {
+  console.log(`Error: ${error.message}`);
+  console.log("Shutting Down the Server for handling uncaughtException");
 });
 
-const path = require("path");
+//config
+if (process.env.NODE_ENV !== "PRODUCTION") {
+  require("dotenv").config({
+    path: "config/.env",
+  });
+}
 
-// config — platform env vars take precedence over .env file
-require("dotenv").config({
-  path: path.join(__dirname, "config", ".env"),
-});
-
-// connect db
-connectDatabase();
-
+//connection to database
+dbConnection();
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+})
+
+
+const server = app.listen(process.env.PORT, () => {
+  console.log(
+    `Server is running on the Prot http://localhost:${process.env.PORT}`
+  );
 });
-
-const PORT = process.env.PORT || 8000;
-
-// create server
-const server = app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
-
-// unhandled promise rejection
-process.on("unhandledRejection", (err) => {
-  console.log(`Shutting down the server for ${err.message}`);
-  console.log(`shutting down the server for unhandle promise rejection`);
-
+//unhandle Promise rejection
+process.on("unhandledRejection", (error) => {
+  console.log(`Shutting down the server for ${error.message}`);
+  console.log(`Shutting down the server for unhanadled  Promise rejection`);
   server.close(() => {
     process.exit(1);
   });
 });
+
+
