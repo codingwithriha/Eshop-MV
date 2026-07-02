@@ -4,17 +4,18 @@ import { getAllOrdersOfShop } from "../../redux/actions/order";
 import styles from "../../styles/styles";
 import { RxCross1 } from "react-icons/rx";
 import axios from "axios";
-import { server } from "../../server";
 import { toast } from "react-toastify";
-import { loadSeller } from "../../redux/actions/user";
+import { server } from "../../server";
+import { getSeller } from "../../redux/actions/seller";
 import { AiOutlineDelete } from "react-icons/ai";
-
-const WithdrawMoney = () => {
+const WithDrawMoney = () => {
   const [open, setOpen] = useState(false);
-  const dispatch = useDispatch();
-  const { seller } = useSelector((state) => state.seller);
   const [paymentMethod, setPaymentMethod] = useState(false);
+  const dispatch = useDispatch();
   const [withdrawAmount, setWithdrawAmount] = useState(50);
+  const { seller } = useSelector((state) => state.seller);
+  const [deliveredOrder, setDeliveredOrder] = useState(null);
+
   const [bankInfo, setBankInfo] = useState({
     bankName: "",
     bankCountry: "",
@@ -23,14 +24,11 @@ const WithdrawMoney = () => {
     bankHolderName: "",
     bankAddress: "",
   });
-
   useEffect(() => {
     dispatch(getAllOrdersOfShop(seller._id));
-  }, [dispatch, seller._id]);
-
+  }, []);
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const withdrawMethod = {
       bankName: bankInfo.bankName,
       bankCountry: bankInfo.bankCountry,
@@ -39,20 +37,14 @@ const WithdrawMoney = () => {
       bankHolderName: bankInfo.bankHolderName,
       bankAddress: bankInfo.bankAddress,
     };
-
-    setPaymentMethod(false);
-
-    await axios
+    axios
       .put(
         `${server}/shop/update-payment-methods`,
-        {
-          withdrawMethod,
-        },
+        { withdrawMethod },
         { withCredentials: true }
       )
       .then((res) => {
-        toast.success("Withdraw method added successfully!");
-        dispatch(loadSeller());
+        toast.success(`Withdraw Method added successfully!`);
         setBankInfo({
           bankName: "",
           bankCountry: "",
@@ -61,57 +53,62 @@ const WithdrawMoney = () => {
           bankHolderName: "",
           bankAddress: "",
         });
+        setPaymentMethod(false);
+        dispatch(getSeller());
       })
+
       .catch((error) => {
-        console.log(error.response.data.message);
+        toast.error(error.response.data.message);
       });
   };
-
   const deleteHandler = async () => {
     await axios
-      .delete(`${server}/shop/delete-withdraw-method`, {
+      .delete(`${server}/shop/delete-withdraw-methods`, {
         withCredentials: true,
       })
       .then((res) => {
-        toast.success("Withdraw method deleted successfully!");
-        dispatch(loadSeller());
+        toast.success("Withdraw Method Deleted Successfuly!");
+        dispatch(getSeller());
+      })
+      .catch((error) => {
+        toast.error(error.response.data.message);
       });
   };
-
-  const error = () => {
-    toast.error("You not have enough balance to withdraw!");
-  };
-
-  const withdrawHandler = async () => {
+  const withdrawHandler = () => {
     if (withdrawAmount < 50 || withdrawAmount > availableBalance) {
       toast.error("You can't withdraw this amount!");
     } else {
       const amount = withdrawAmount;
-      await axios
+      axios
         .post(
           `${server}/withdraw/create-withdraw-request`,
           { amount },
-          { withCredentials: true }
+          {
+            withCredentials: true,
+          }
         )
         .then((res) => {
-          toast.success("Withdraw money request is successful!");
+          toast.success(`Withdraw money request is successful!\n`);
+          setOpen(false);
         });
     }
   };
-
+  const error = () => {
+    toast.error("You not have enough balance to withdraw!");
+  };
   const availableBalance = seller?.availableBalance.toFixed(2);
 
   return (
     <div className="w-full h-[90vh] p-8">
-      <div className="w-full bg-white h-full rounded flex items-center justify-center flex-col">
-        <h5 className="text-[20px] pb-4">
-          Available Balance: ${availableBalance}
+      <div className="w-full h-full rounded flex flex-col items-center justify-center bg-white">
+        <h5 className="text-[20px] pb-2">
+          Available Balance:${availableBalance}
         </h5>
         <div
-          className={`${styles.button} text-white !h-[42px] !rounded`}
           onClick={() => (availableBalance < 50 ? error() : setOpen(true))}
+          className={`${styles.button} text-white !h-[42px] !rounded`}
         >
-          Withdraw
+          With Draw
         </div>
       </div>
       {open && (
@@ -144,7 +141,10 @@ const WithdrawMoney = () => {
                       required
                       value={bankInfo.bankName}
                       onChange={(e) =>
-                        setBankInfo({ ...bankInfo, bankName: e.target.value })
+                        setBankInfo({
+                          ...bankInfo,
+                          bankName: e.target.value,
+                        })
                       }
                       id=""
                       placeholder="Enter your Bank name!"
@@ -173,6 +173,26 @@ const WithdrawMoney = () => {
                   </div>
                   <div className="pt-2">
                     <label>
+                      Bank Holder Name <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      name=""
+                      required
+                      value={bankInfo.bankHolderName}
+                      onChange={(e) =>
+                        setBankInfo({
+                          ...bankInfo,
+                          bankHolderName: e.target.value,
+                        })
+                      }
+                      id=""
+                      placeholder="Enter your bank Holder name!"
+                      className={`${styles.input} mt-2`}
+                    />
+                  </div>
+                  <div className="pt-2">
+                    <label>
                       Bank Swift Code <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -191,7 +211,6 @@ const WithdrawMoney = () => {
                       className={`${styles.input} mt-2`}
                     />
                   </div>
-
                   <div className="pt-2">
                     <label>
                       Bank Account Number{" "}
@@ -212,55 +231,33 @@ const WithdrawMoney = () => {
                       placeholder="Enter your bank account number!"
                       className={`${styles.input} mt-2`}
                     />
+                    <div className="pt-2">
+                      <label>
+                        Bank Address <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        name=""
+                        required
+                        id=""
+                        value={bankInfo.bankAddress}
+                        onChange={(e) =>
+                          setBankInfo({
+                            ...bankInfo,
+                            bankAddress: e.target.value,
+                          })
+                        }
+                        placeholder="Enter your bank address!"
+                        className={`${styles.input} mt-2`}
+                      />
+                    </div>
+                    <button
+                      type="submit"
+                      className={`${styles.button} mb-3 text-white`}
+                    >
+                      Add{" "}
+                    </button>
                   </div>
-                  <div className="pt-2">
-                    <label>
-                      Bank Holder Name <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      name=""
-                      required
-                      value={bankInfo.bankHolderName}
-                      onChange={(e) =>
-                        setBankInfo({
-                          ...bankInfo,
-                          bankHolderName: e.target.value,
-                        })
-                      }
-                      id=""
-                      placeholder="Enter your bank Holder name!"
-                      className={`${styles.input} mt-2`}
-                    />
-                  </div>
-
-                  <div className="pt-2">
-                    <label>
-                      Bank Address <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      name=""
-                      required
-                      id=""
-                      value={bankInfo.bankAddress}
-                      onChange={(e) =>
-                        setBankInfo({
-                          ...bankInfo,
-                          bankAddress: e.target.value,
-                        })
-                      }
-                      placeholder="Enter your bank address!"
-                      className={`${styles.input} mt-2`}
-                    />
-                  </div>
-
-                  <button
-                    type="submit"
-                    className={`${styles.button} mb-3 text-white`}
-                  >
-                    Add
-                  </button>
                 </form>
               </div>
             ) : (
@@ -268,7 +265,6 @@ const WithdrawMoney = () => {
                 <h3 className="text-[22px] font-Poppins">
                   Available Withdraw Methods:
                 </h3>
-
                 {seller && seller?.withdrawMethod ? (
                   <div>
                     <div className="800px:flex w-full justify-between items-center">
@@ -290,6 +286,7 @@ const WithdrawMoney = () => {
                         />
                       </div>
                     </div>
+
                     <br />
                     <h4>Available Balance: {availableBalance}$</h4>
                     <br />
@@ -312,14 +309,14 @@ const WithdrawMoney = () => {
                 ) : (
                   <div>
                     <p className="text-[18px] pt-2">
-                      No Withdraw Methods available!
+                      No Payment Method Available!
                     </p>
                     <div className="w-full flex items-center">
                       <div
                         className={`${styles.button} text-[#fff] text-[18px] mt-4`}
                         onClick={() => setPaymentMethod(true)}
                       >
-                        Add new
+                        Add New
                       </div>
                     </div>
                   </div>
@@ -333,4 +330,4 @@ const WithdrawMoney = () => {
   );
 };
 
-export default WithdrawMoney;
+export default WithDrawMoney;

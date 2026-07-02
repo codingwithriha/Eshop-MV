@@ -1,67 +1,61 @@
-const Messages = require("../model/messages");
-const ErrorHandler = require("../utils/ErrorHandler");
-const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const express = require("express");
-const cloudinary = require("cloudinary");
 const router = express.Router();
-
-// create new message
+const Messages = require("../model/messages");
+const { upload } = require("../multer");
+const path = require("path");
+const ErrorHandler = require("../utils/ErrorHandler");
+const catchAsyncError = require("../middleware/catchAsyncErrors");
+const cloudinary = require("cloudinary").v2;
+//create new message
 router.post(
   "/create-new-message",
-  catchAsyncErrors(async (req, res, next) => {
+  catchAsyncError(async (req, res, next) => {
     try {
-      const messageData = req.body;
+      const { sender, text, conversationId, images } = req.body;
+      let myCloud;
 
-      if (req.body.images) {
-        const myCloud = await cloudinary.v2.uploader.upload(req.body.images, {
+      if (images) {
+        myCloud = await cloudinary.uploader.upload(images, {
           folder: "messages",
         });
-        messageData.images = {
-          public_id: myCloud.public_id,
-          url: myCloud.url,
-        };
       }
-
-      messageData.conversationId = req.body.conversationId;
-      messageData.sender = req.body.sender;
-      messageData.text = req.body.text;
-
       const message = new Messages({
-        conversationId: messageData.conversationId,
-        text: messageData.text,
-        sender: messageData.sender,
-        images: messageData.images ? messageData.images : undefined,
+        conversationId,
+        text: text ? text : undefined,
+        sender,
+        images: images
+          ? {
+              public_id: myCloud.public_id,
+              url: myCloud.secure_url,
+            }
+          : undefined,
       });
 
       await message.save();
-
       res.status(201).json({
         success: true,
         message,
       });
     } catch (error) {
-      return next(new ErrorHandler(error.message), 500);
+      return next(new ErrorHandler(error.message, 500));
     }
   })
 );
-
-// get all messages with conversation id
+//get all messages with conversation ID
 router.get(
   "/get-all-messages/:id",
-  catchAsyncErrors(async (req, res, next) => {
+  catchAsyncError(async (req, res, next) => {
     try {
       const messages = await Messages.find({
         conversationId: req.params.id,
       });
-
       res.status(201).json({
         success: true,
         messages,
       });
     } catch (error) {
-      return next(new ErrorHandler(error.message), 500);
+      return next(new ErrorHandler(error.message, 500));
     }
   })
 );
-
 module.exports = router;
