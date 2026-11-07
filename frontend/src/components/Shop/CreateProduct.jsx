@@ -29,7 +29,6 @@ const CreateProduct = () => {
     if (success) {
       toast.success("Product created successfully.");
       dispatch({ type: "clearErrors" });
-      dispatch({ type: "clearProduct" });
       navigate("/dashboard-products");
     }
   }, [dispatch, error, success, navigate]);
