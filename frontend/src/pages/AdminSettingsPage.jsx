@@ -40,7 +40,7 @@ const AdminSettingsPage = () => {
     <div className="min-h-screen bg-[#f6f8f5]">
       <AdminHeader />
       <div className="flex w-full">
-        <div className="w-[76px] shrink-0 800px:w-[290px]">
+        <div className="w-[76px] shrink-0 800px:w-[330px]">
           <AdminSidebar active={8} />
         </div>
 
