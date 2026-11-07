@@ -1,53 +1,41 @@
 import React from "react";
-import styles from "../../styles/styles";
 
-const Sponsered = () => {
-  return (
-    <div
-      className={`${styles.section} hidden sm:block bg-white py-10 mb-12 cursor-pointer rounded-xl`}
-    >
-      <div className="flex justify-between w-full">
-        <div className="flex items-start">
-          <img
-            src="https://logos-world.net/wp-content/uploads/2020/08/Dell-Logo-1989-2016.png"
-            alt="spnosered_Image"
-            className="w-[150px] object-contain"
-          />
-        </div>
-        <div className="flex items-start">
-          <img
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTyn9SwCkPFBWP81F6fYZ9LqVSex2fiDkJVw&s"
-            alt="spnosered_Image"
-            className="w-[150px] object-contain"
-          />
-        </div>
-        <div className="flex items-start">
-          <img
-            src="https://logos-world.net/wp-content/uploads/2020/04/Sony-Logo.png"
-            alt="spnosered_Image"
-            className="w-[150px] object-contain"
+const brands = [
+  { name: "Dell", label: "Technology", wordmark: "text-[34px] font-black tracking-[-.09em]" },
+  { name: "hp", label: "Computing", wordmark: "text-[43px] font-black italic tracking-[-.1em]" },
+  { name: "SONY", label: "Electronics", wordmark: "text-[27px] font-black tracking-[.04em]" },
+  { name: "Lenovo", label: "Smart devices", wordmark: "text-[29px] font-extrabold tracking-[-.06em]" },
+  { name: "Apple", label: "Personal tech", wordmark: "text-[30px] font-semibold tracking-[-.06em]" },
+];
 
-          />
-        </div>
-        <div className="flex items-start">
-          <img
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQvR10wPNSA6ptx1XqbuKj1FLF62uYRfe5d-w&s"
-            alt="spnosered_Image"
-            className="w-[150px] object-contain"
-
-          />
-        </div>
-        <div className="flex items-start">
-          <img
-            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAACoCAMAAABt9SM9AAAAeFBMVEX///8AAAD8/Pz39/fs7Oz09PS5ubmvr6/c3NzR0dG8vLzKysqnp6dvb29hYWFWVlY9PT2YmJh9fX0wMDA1NTVRUVHp6elERETY2NiFhYVzc3OhoaGTk5OoqKh/f39bW1sLCwsdHR0pKSkWFhYiIiLGxsaLi4s7Ozsa4oFzAAAFD0lEQVR4nO2d6XLqMAyFs0AT9oayQ2kopX3/N7wQyhZkkktiyVL1/YYZ+YzjyNKx43mKoiiKoiiKoigWCRsBdQgsCOJk8Ob7M+o4GNAapn5GizoS54m+/BMq1mMS/woV6xEvqa9ilWMy9m+JqSNyl8jPo6mDid6dVj51SK4SvN5r9UEdlKOEb/da+SvqqNwkGAFa6csQJv8a1CXLzBDUakEdlpO8gFrpUwgxgbV6o47LSaawWBF1XC5yn7hnbKnjcpEQ1spvUwfmIitYqyl1XC5imlgT6sBcJIG1SqjjcpINqNWYOiwn6YBapU3quJxkAYqlLTAQUKsddVRuEkNavVBH5ShL1ao8wJKlmbuJ+z20ru1G8lJNNWcwEuS00rz9Ac0bqca6H3zEtViDDnU0jnN+DDdztTUUsvH97XjYhZQKwj/ndAhn7WS+Xgzn3U6j5F+CWXf4uskm3Od0mHT+xguyEeVyzkVUuIS3VoDnYRGVFZopzSXYtHldmfUKOosU+k+WgHXlTrAZ4B86MVqC86Q1N/8loyczuY9h68KF8Utu8Z6sPgv+cmAg75XZfDCrLvQvesVJGaUyFiHlyOrH0DOFJkrSCpu7NeTMMiOpMBj2/2voTzCkHmJtxFvbWu1fjEIexbZ9qfZsRGRd7yha7RGQc0EFdVULpvxrsDoj6sFWBO4t26JHPdxKGLyO1uhSD7gKX8Xjq5M552LXGlWqDes9dQtVqz7naYX8EC6pR1sNg33PDsz7+w1Mrbifu8Bc3bl3FzEnFns/0jeeVuyPa+bdHRbhb2I2HICzAftigwd0RS3B/5wY3vLOvS7jYZb8uGcNewZYWr1Sj7Q6zeJR1gT7FAuxQJryLjVkoC1ZEpqrH1hiSejbo1WyBPShTad2a+eHeqQ1AB7rssGceqQ1gONu8CVsdRDtDQLSd6/ICFobEhySpSyRdSDhXA+aWPxLWZ5n3RWpYqlYdpFgjUQTS8ICjyaWhNQBTSwJRQe01IG10+8XNLEk1P7QtjsSLuLsYoklIdHC690z97AdwDOT8na+Z+C1DQV8owHRbySgyQreem8FAS0LtBSev/UW9dwcf2fIDk8s/tkD6mkw9i/E0ncy1AD7XAttK32Ae6sVrc2awbwGiOZ2OMK8Fo8rVsrbegRfvG2NLetaDWamdSDlvG6h+dnOcG5eoNlKzzA+HIabPGRM2b4U8Z9Dn/HkQjuRcs32nXrYz4FmLL0lZVk7JXkOfa6FZvjLl9ahHvZzIO8Pf+Ha0cc7+nsF19t7EA+Vn+HrfiAQi+/9PahX9xzhW5BH7Ez/wvnkE+IdK0fY7g49VIdIBu/PlyNPLd5Wb9ypxb2DiPpC5LxiZSBcb35iTT3WyiCm8bz7YRngx2NsIOEEAZajRsDdUJ7xO/Z1w7XckOP/vnTyJPxX9yMYVcAt9SBrA8Fiyt+He8Z6W+ybeoQ1YnvXI8ANf4Xlq9rY73NusZo/sHd35yn6YF8FpGQNF0JrO+op9dAsYC3bYu2QNGHJOSlkm5PHSm4qbnE/YaEiz7epWkjt37Vga/UrQ81zS7RWJRoYH9/RrtNqddrv88LUjPsJp0IeuScHUc76Hyc/D34u4S7JAmJDLfAj/83tI42u4XT6WGR+dQewT/xKHuyFZ8BBoC1P6+gTTG7fium8qHQXtG/1GjF1cD9HMzqt3v1uySNKs/fe5vi8LjkfanqSRhzzNnIoiqIoiqIotfAPMn1L3B4ltyUAAAAASUVORK5CYII="
-            alt="spnosered_Image"
-            className="w-[150px] object-contain"
-
-          />
+const Sponsered = () => (
+  <section className="mx-auto my-14 w-full max-w-[1440px] px-4 sm:px-6 lg:px-8">
+    <div className="overflow-hidden rounded-[28px] border border-[#e7ece5] bg-white shadow-[0_14px_40px_rgba(36,55,42,.055)]">
+      <div className="flex flex-col items-center px-5 pb-6 pt-8 text-center sm:pt-9">
+        <span className="text-[9px] font-extrabold uppercase tracking-[.24em] text-[#a0875e]">Shop your favourites</span>
+        <h2 className="mt-2 font-display text-2xl font-extrabold tracking-[-.04em] text-[#26372d] sm:text-[30px]">Popular brands, all in one place.</h2>
+        <p className="mt-2 max-w-lg text-sm leading-6 text-[#87938a]">Find products from the names you already know and trust.</p>
+      </div>
+      <div className="relative overflow-hidden border-y border-[#edf1eb] bg-[#fafbf9] py-5 sm:py-6">
+        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 bg-gradient-to-r from-[#fafbf9] to-transparent sm:w-20" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-[#fafbf9] to-transparent sm:w-20" />
+        <div className="eshop-home-brand-marquee">
+          <div className="eshop-home-brand-track flex w-max items-center gap-3 px-3 sm:gap-4 sm:px-5">
+            {[...brands, ...brands].map((brand, index) => (
+              <div key={`${brand.name}-${index}`} className="group flex h-[104px] w-[180px] shrink-0 flex-col items-center justify-center rounded-2xl border border-[#e8ede6] bg-white px-4 transition-all duration-300 hover:-translate-y-1 hover:border-[#cbd9ca] hover:shadow-[0_10px_24px_rgba(38,55,45,.07)] sm:w-[205px]">
+                <span className={`leading-none text-[#315c46] transition-colors group-hover:text-[#9a8058] ${brand.wordmark}`}>{brand.name}</span>
+                <span className="mt-3 text-[9px] font-bold uppercase tracking-[.17em] text-[#a0aaa1]">{brand.label}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
+      <div className="flex items-center justify-center gap-3 px-4 py-4 text-[9px] font-bold uppercase tracking-[.18em] text-[#9aa69d]">
+        <span className="h-px w-7 bg-[#dce5da]" /> Discover more from top brands <span className="h-px w-7 bg-[#dce5da]" />
+      </div>
     </div>
-  );
-};
+    <style>{`@keyframes eshop-home-brand-scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}.eshop-home-brand-track{animation:eshop-home-brand-scroll 36s linear infinite}.eshop-home-brand-marquee:hover .eshop-home-brand-track{animation-play-state:paused}@media(prefers-reduced-motion:reduce){.eshop-home-brand-track{animation:none}}`}</style>
+  </section>
+);
 
 export default Sponsered;
