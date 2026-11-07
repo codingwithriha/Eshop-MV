@@ -7,6 +7,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import { getAllOrdersOfAdmin } from "../../../redux/actions/order";
 import Loader from "../../../components/Layout/Loader";
 import { getAllSellers } from "../../../redux/actions/seller";
+import DashboardAnalytics from "../../Layout/DashboardAnalytics";
 
 const AdminDashBoardMain = () => {
   const dispatch = useDispatch();
@@ -68,6 +69,8 @@ const AdminDashBoardMain = () => {
           <Link to="/admin-orders" className="mt-1 inline-flex text-xs font-bold text-[#315c46] hover:text-[#244735]">View orders <span className="ml-1">→</span></Link>
         </article>
       </section>
+
+      <DashboardAnalytics orders={orders} heading="Marketplace performance" />
 
       <section className="mt-6 overflow-hidden rounded-2xl border border-[#e7ebe5] bg-white p-3 shadow-sm sm:p-5">
         <div className="flex flex-wrap items-end justify-between gap-2 px-2 pb-4 pt-2">
