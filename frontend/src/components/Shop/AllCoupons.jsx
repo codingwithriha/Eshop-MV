@@ -1,256 +1,112 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { deleteProduct, getAllProductsShop } from "../../redux/actions/product";
-import Loader from "../Layout/Loader";
-import Button from "@mui/material/Button";
+import React, { useEffect, useMemo, useState } from "react";
+import { useSelector } from "react-redux";
 import { DataGrid } from "@mui/x-data-grid";
-import { AiOutlineDelete } from "react-icons/ai";
-import styles from "../../styles/styles";
-import { RxCross1 } from "react-icons/rx";
-import axios from "axios";
+import { FiPlus, FiTag, FiTrash2, FiPercent, FiDollarSign, FiPackage, FiX } from "react-icons/fi";
 import { toast } from "react-toastify";
+import axios from "axios";
+import Loader from "../Layout/Loader";
 import { server } from "../../server";
+
+const fieldClass = "mt-1.5 w-full rounded-xl border border-[#e2e9e1] bg-white px-3.5 py-3 text-sm text-[#344238] outline-none transition placeholder:text-[#a0aaa3] focus:border-[#789581] focus:ring-4 focus:ring-[#edf3ed]";
+
 const AllCoupons = () => {
-  const [name, setName] = useState("");
-  const [minAmount, setMinAmount] = useState("");
-  const [coupons, setCoupons] = useState([]);
-  const [isLoading, setisLoading] = useState(true);
-  const [value, setValue] = useState("");
-  const [selectedProducts, setSelectedProducts] = useState("");
-  const [maxAmount, setMaxAmount] = useState("");
-  const [open, setOpen] = useState(false);
   const { seller } = useSelector((state) => state.seller);
   const { products } = useSelector((state) => state.products);
-  const dispatch = useDispatch();
+  const [coupons, setCoupons] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [form, setForm] = useState({ name: "", value: "", minAmount: "", maxAmount: "", selectedProducts: "" });
+
   useEffect(() => {
     if (!seller?._id) return;
-    axios
-      .get(`${server}/coupon/get-coupon/${seller?._id}`, {
-        withCredentials: true,
-      })
-      .then((res) => {
-        setisLoading(false);
-        console.log(res.data);
-        setCoupons(res.data.couponCode);
-      })
-      .catch((error) => {
-        setisLoading(false);
-      });
+    let mounted = true;
+    axios.get(server + "/coupon/get-coupon/" + seller._id, { withCredentials: true })
+      .then(({ data }) => { if (mounted) setCoupons(Array.isArray(data?.couponCode) ? data.couponCode : []); })
+      .catch((error) => { if (mounted) toast.error(error.response?.data?.message || "Unable to load discount codes."); })
+      .finally(() => { if (mounted) setLoading(false); });
+    return () => { mounted = false; };
   }, [seller?._id]);
-  
+
+  const updateField = (key) => (event) => setForm((current) => ({ ...current, [key]: event.target.value }));
+
+  const handleCreate = async (event) => {
+    event.preventDefault();
+    if (!seller?._id) return toast.error("Seller account is not ready yet.");
+    setSaving(true);
+    try {
+      const { data } = await axios.post(server + "/coupon/create-coupun-code", {
+        ...form, shop: seller, shopId: seller._id,
+      }, { withCredentials: true });
+      const created = data?.couponCode || data?.coupon || data?.newCoupon;
+      if (created?._id) setCoupons((current) => [created, ...current]);
+      else {
+        const response = await axios.get(server + "/coupon/get-coupon/" + seller._id, { withCredentials: true });
+        setCoupons(Array.isArray(response.data?.couponCode) ? response.data.couponCode : []);
+      }
+      toast.success("Discount code created successfully.");
+      setForm({ name: "", value: "", minAmount: "", maxAmount: "", selectedProducts: "" });
+      setOpen(false);
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Could not create the discount code.");
+    } finally { setSaving(false); }
+  };
+
   const handleDelete = async (id) => {
-    axios
-      .delete(`${server}/coupon/delete-coupon/${id}`, { withCredentials: true })
-      .then((res) => {
-        toast.success("Coupon code deleted succesfully!");
-      });
-    window.location.reload();
+    if (!window.confirm("Delete this discount code? This cannot be undone.")) return;
+    try {
+      await axios.delete(server + "/coupon/delete-coupon/" + id, { withCredentials: true });
+      setCoupons((current) => current.filter((coupon) => coupon._id !== id));
+      toast.success("Discount code deleted.");
+    } catch (error) { toast.error(error.response?.data?.message || "Could not delete the discount code."); }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const columns = useMemo(() => [
+    { field: "name", headerName: "CODE NAME", minWidth: 170, flex: 1.2 },
+    { field: "value", headerName: "DISCOUNT", minWidth: 115, flex: .7, renderCell: (params) => <span className="rounded-lg bg-[#edf4ed] px-2.5 py-1 font-bold text-[#315c46]">{params.value}% OFF</span> },
+    { field: "minAmount", headerName: "MIN. ORDER", minWidth: 120, flex: .8, renderCell: (params) => params.value ? "$" + Number(params.value).toLocaleString() : "—" },
+    { field: "maxAmount", headerName: "MAX. DISCOUNT", minWidth: 140, flex: .9, renderCell: (params) => params.value ? "$" + Number(params.value).toLocaleString() : "—" },
+    { field: "product", headerName: "APPLIES TO", minWidth: 150, flex: 1, renderCell: (params) => params.value || "Selected shop products" },
+    { field: "actions", headerName: "", minWidth: 80, sortable: false, align: "right", renderCell: (params) => <button onClick={() => handleDelete(params.id)} title="Delete discount code" className="rounded-lg p-2 text-[#a45e52] transition hover:bg-[#fff1ee]"><FiTrash2 size={16}/></button> },
+  ], []);
 
-    await axios
-      .post(
-        `${server}/coupon/create-coupun-code`,
-        {
-          name,
-          minAmount,
-          maxAmount,
-          selectedProducts,
-          value,
-          shop: seller,
-          shopId: seller?._id,
-        },
-        { withCredentials: true }
-      )
-      .then((res) => {
-        toast.success("Coupon code created successfully!");
-        setOpen(false);
-        window.location.reload();
-      })
-      .catch((error) => {
-        toast.error(error.response.data.message);
-      });
-  };
-  const columns = [
-    {
-      field: "id",
-      headerName: "Product Id",
-      minWidth: 150,
-      flex: 0.7,
-    },
-    {
-      field: "name",
-      headerName: "Name",
-      minWidth: 180,
-      flex: 1.4,
-    },
-    {
-      field: "price",
-      headerName: "Price",
-      minWidth: 100,
-      flex: 0.6,
-    },
-    {
-      field: "Delete",
-      flex: 0.8,
-      minWidth: 120,
-      type: "number",
-      sortable: false,
-      renderCell: (params) => {
-        return (
-          <>
-            <Button onClick={() => handleDelete(params.id)}>
-              <AiOutlineDelete size={20} />
-            </Button>
-          </>
-        );
-      },
-    },
-  ];
-  const row = [];
-  coupons &&
-    coupons.forEach((item) => {
-      row.push({
-        id: item._id,
-        name: item.name,
-        price: item.value + "%",
-      });
-    });
+  const rows = coupons.map((coupon) => ({ id: coupon._id, name: coupon.name, value: coupon.value, minAmount: coupon.minAmount, maxAmount: coupon.maxAmount, product: coupon.selectedProducts || coupon.productName || "" }));
+
+  if (loading) return <div className="flex min-h-[60vh] w-full items-center justify-center"><Loader /></div>;
+
   return (
-    <div>
-      {isLoading ? (
-        <Loader />
-      ) : (
-        <div className="w-full">
-          <div className="w-full flex justify-end ">
-            <div
-              onClick={() => setOpen(true)}
-              className={`${styles.button} !h-[45px] !rounded-[5px] !w-[180px] mr-3 px-3 mb-3`}
-            >
-              <span className="text-white">Create Coupon Code</span>
-            </div>
-          </div>
-          <DataGrid
-            rows={row}
-            columns={columns}
-            pageSize={10}
-            disableSelectionOnClick
-            autoHeight
-          />
-          {open && (
-            <div className="fixed top-0 left-0 w-full h-screen bg-[#00000020] z-[2000] flex items-center justify-center p-4">
-              <div className="w-full max-w-[500px] max-h-[90vh] p-6 rounded-lg bg-white shadow-lg relative flex flex-col">
-                <div className="w-full flex justify-between items-center mb-4">
-                  <h5 className="text-[24px] font-Poppins font-semibold text-gray-800">
-                    Create Coupon Code
-                  </h5>
-                  <RxCross1
-                    size={24}
-                    onClick={() => setOpen(false)}
-                    className="cursor-pointer text-gray-500 hover:text-gray-700"
-                  />
-                </div>
-                {/* Create Coupon Code Form */}
-                <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto pr-2">
-                  <div className="space-y-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Name <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        name="name"
-                        required
-                        value={name}
-                        className="w-full px-3 h-[40px] border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
-                        onChange={(e) => setName(e.target.value)}
-                        placeholder="Enter coupon code name"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Discount Percentage <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        type="number"
-                        name="value"
-                        value={value}
-                        required
-                        min="0"
-                        max="100"
-                        className="w-full px-3 h-[40px] border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
-                        onChange={(e) => setValue(e.target.value)}
-                        placeholder="Enter discount percentage"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Minimum Amount <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        type="number"
-                        name="minAmount"
-                        value={minAmount}
-                        min="0"
-                        className="w-full px-3 h-[40px] border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
-                        onChange={(e) => setMinAmount(e.target.value)}
-                        placeholder="Enter minimum order amount"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Maximum Amount <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        type="number"
-                        name="maxAmount"
-                        value={maxAmount}
-                        min="0"
-                        className="w-full px-3 h-[40px] border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
-                        onChange={(e) => setMaxAmount(e.target.value)}
-                        placeholder="Enter maximum discount amount"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Selected Products
-                      </label>
-                      <select
-                        className="w-full px-3 h-[40px] border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition bg-white"
-                        value={selectedProducts}
-                        onChange={(e) => setSelectedProducts(e.target.value)}
-                      >
-                        <option value="">Choose a product (optional)</option>
-                        {products &&
-                          products.map((i) => (
-                            <option value={i.name} key={i.name}>
-                              {i.name}
-                            </option>
-                          ))}
-                      </select>
-                    </div>
-                  </div>
-                  <div className="mt-4 pt-4 border-t border-gray-200">
-                  <input
-                    type="submit"
-                    value="Create Coupon"
-                    className="w-full h-[45px] bg-blue-600 text-white rounded-md font-medium hover:bg-blue-700 transition cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                  />
-                </div>
-                </form>
-                
-              </div>
-            </div>
-          )}
+    <main className="min-h-[calc(100vh-76px)] w-full min-w-0 bg-[#f6f8f5] px-4 py-7 sm:px-7 lg:px-10">
+      <div className="mx-auto max-w-[1500px]">
+        <div className="mb-7 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+          <div><p className="text-[10px] font-extrabold uppercase tracking-[.18em] text-[#8a988d]">Marketing · Promotions</p><h1 className="mt-2 font-display text-2xl font-extrabold tracking-tight text-[#26372d] sm:text-3xl">Discount codes</h1><p className="mt-2 text-sm text-[#78857b]">Create and manage offers that encourage customers to shop.</p></div>
+          <button onClick={() => setOpen(true)} className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-[#315c46] px-5 text-sm font-bold text-white shadow-[0_8px_20px_rgba(49,92,70,.15)] transition hover:bg-[#254b37]"><FiPlus size={17}/> Create discount</button>
         </div>
-      )}
-    </div>
+
+        <section className="mb-6 grid gap-4 sm:grid-cols-3">
+          <div className="rounded-2xl border border-[#e6ebe4] bg-white p-5"><span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#edf3ed] text-[#315c46]"><FiTag size={19}/></span><p className="mt-4 text-xs font-medium text-[#849087]">Total discount codes</p><p className="mt-1 font-display text-2xl font-extrabold text-[#26372d]">{coupons.length}</p></div>
+          <div className="rounded-2xl border border-[#e6ebe4] bg-white p-5"><span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#f5f0e8] text-[#a17a4f]"><FiPercent size={19}/></span><p className="mt-4 text-xs font-medium text-[#849087]">Highest discount</p><p className="mt-1 font-display text-2xl font-extrabold text-[#26372d]">{coupons.length ? Math.max(...coupons.map((item) => Number(item.value) || 0)) + "%" : "—"}</p></div>
+          <div className="rounded-2xl border border-[#e6ebe4] bg-white p-5"><span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#edf1f5] text-[#627a91]"><FiPackage size={19}/></span><p className="mt-4 text-xs font-medium text-[#849087]">Shop products</p><p className="mt-1 font-display text-2xl font-extrabold text-[#26372d]">{products?.length || 0}</p></div>
+        </section>
+
+        <section className="overflow-hidden rounded-2xl border border-[#e6ebe4] bg-white shadow-[0_5px_24px_rgba(35,52,40,.04)]">
+          <div className="flex flex-col gap-1 border-b border-[#edf0ec] px-5 py-5 sm:px-6"><h2 className="text-base font-bold text-[#29372e]">Your discount codes</h2><p className="text-xs text-[#879188]">Review the offers created for your shop.</p></div>
+          {rows.length ? <div className="w-full overflow-x-auto"><div className="min-w-[760px]"><DataGrid rows={rows} columns={columns} autoHeight disableSelectionOnClick pageSize={10} rowsPerPageOptions={[10,25,50]} sx={{ border: 0, color: "#46544a", "& .MuiDataGrid-columnHeaders": { backgroundColor: "#f8faf7", borderBottom: "1px solid #e9eee7", fontSize: "11px", fontWeight: 800, letterSpacing: ".06em" }, "& .MuiDataGrid-cell": { borderColor: "#f0f2ef", fontSize: "13px" }, "& .MuiDataGrid-footerContainer": { borderColor: "#edf0ec" } }} /></div></div> :
+            <div className="flex flex-col items-center px-6 py-16 text-center"><span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#edf3ed] text-[#315c46]"><FiTag size={25}/></span><h3 className="mt-4 text-base font-bold text-[#344238]">No discount codes yet</h3><p className="mt-1 max-w-sm text-sm leading-6 text-[#879188]">Create your first offer to give customers an extra reason to buy from your shop.</p><button onClick={() => setOpen(true)} className="mt-5 rounded-xl bg-[#315c46] px-4 py-2.5 text-sm font-bold text-white hover:bg-[#254b37]">Create your first code</button></div>}
+        </section>
+      </div>
+
+      {open && <div className="fixed inset-0 z-[2000] flex items-center justify-center bg-[#17231b]/45 p-4 backdrop-blur-sm" onMouseDown={(event) => { if (event.target === event.currentTarget) setOpen(false); }}>
+        <section className="max-h-[92vh] w-full max-w-[560px] overflow-y-auto rounded-2xl bg-white shadow-2xl">
+          <div className="flex items-start justify-between border-b border-[#edf0ec] px-6 py-5"><div><p className="text-[10px] font-extrabold uppercase tracking-[.16em] text-[#8a988d]">New promotion</p><h2 className="mt-1 text-xl font-extrabold text-[#26372d]">Create discount code</h2><p className="mt-1 text-xs text-[#879188]">Set the discount and choose where it applies.</p></div><button onClick={() => setOpen(false)} className="rounded-lg p-2 text-[#78857b] hover:bg-[#f1f4f0]"><FiX size={19}/></button></div>
+          <form onSubmit={handleCreate} className="space-y-4 px-6 py-5">
+            <label className="block text-xs font-bold text-[#536157]">Code name<input className={fieldClass} required value={form.name} onChange={updateField("name")} placeholder="e.g. WELCOME10"/></label>
+            <div className="grid gap-4 sm:grid-cols-2"><label className="block text-xs font-bold text-[#536157]">Discount percentage<input className={fieldClass} type="number" required min="1" max="100" value={form.value} onChange={updateField("value")} placeholder="10"/></label><label className="block text-xs font-bold text-[#536157]">Minimum order amount<input className={fieldClass} type="number" min="0" value={form.minAmount} onChange={updateField("minAmount")} placeholder="Optional"/></label></div>
+            <div className="grid gap-4 sm:grid-cols-2"><label className="block text-xs font-bold text-[#536157]">Maximum discount amount<input className={fieldClass} type="number" min="0" value={form.maxAmount} onChange={updateField("maxAmount")} placeholder="Optional"/></label><label className="block text-xs font-bold text-[#536157]">Apply to product<select className={fieldClass} value={form.selectedProducts} onChange={updateField("selectedProducts")}><option value="">All shop products</option>{products?.map((product) => <option key={product._id} value={product.name}>{product.name}</option>)}</select></label></div>
+            <div className="flex flex-col-reverse gap-2 border-t border-[#edf0ec] pt-4 sm:flex-row sm:justify-end"><button type="button" onClick={() => setOpen(false)} className="rounded-xl border border-[#e2e9e1] px-4 py-3 text-sm font-bold text-[#68756c] hover:bg-[#f7f9f6]">Cancel</button><button disabled={saving} type="submit" className="rounded-xl bg-[#315c46] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#254b37] disabled:opacity-60">{saving ? "Creating..." : "Create discount code"}</button></div>
+          </form>
+        </section>
+      </div>}
+    </main>
   );
 };
 export default AllCoupons;
