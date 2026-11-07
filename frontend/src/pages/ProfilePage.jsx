@@ -4,7 +4,7 @@ import Loader from "../components/Layout/Loader";
 import ProfileSideBar from "../components/Profile/ProfileSidebar";
 import ProfileContent from "../components/Profile/ProfileContent";
 import {useSelector} from "react-redux";
-import {FiUser,FiShieldCheck} from "react-icons/fi";
+import {FiUser,FiShield} from "react-icons/fi";
 const ProfilePage=()=>{
  const {loading,user}=useSelector(s=>s.user);const [active,setActive]=useState(1);
  return <div className="min-h-screen bg-[#f6f8f5]">{loading||!user?._id?<Loader/>:<><Header/><main className="mx-auto w-full max-w-[1440px] px-4 py-7 sm:px-6 lg:px-8 lg:py-10">
