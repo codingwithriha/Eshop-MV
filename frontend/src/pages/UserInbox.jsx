@@ -207,13 +207,11 @@ const UserInbox = () => {
   }, [messages]);
 
   return (
-    <div className="w-full">
+    <div className="min-h-[75vh] w-full bg-[#f7f9f6] pb-12">
       {!open && (
         <>
           <Header />
-          <h1 className="text-center text-[30px] py-3 font-Poppins">
-            All Messages
-          </h1>
+          <section className="mx-auto max-w-6xl px-4 pt-10 sm:px-6"><div className="mb-7 flex flex-wrap items-end justify-between gap-3"><div><p className="text-[10px] font-extrabold uppercase tracking-[.2em] text-[#9a8058]">Your conversations</p><h1 className="mt-2 font-display text-3xl font-extrabold tracking-tight text-[#26372d]">Messages</h1><p className="mt-2 text-sm text-[#87938a]">Connect with shops and get help with your orders.</p></div><span className="rounded-full border border-[#e2e9e0] bg-white px-4 py-2 text-xs font-bold text-[#657369]">{conversations.length} conversations</span></div><div className="overflow-hidden rounded-[24px] border border-[#e5ebe3] bg-white shadow-[0_12px_36px_rgba(36,55,42,.055)]">
           {/* All messages list */}
           {conversations &&
             conversations.map((item, index) => (
@@ -287,23 +285,15 @@ const MessageList = ({
   }, [me, data, online, setActiveStatus]);
 
   return (
-    <div
-      className={`w-full flex p-3 px-3 ${
-        active === index ? "bg-[#00000010]" : "bg-transparent"
-      }  cursor-pointer`}
-      onClick={(e) =>
-        setActive(index) ||
-        handleClick(data._id) ||
-        setCurrentChat(data) ||
-        setUserData(user) ||
-        setActiveStatus(online)
-      }
+    <button type="button"
+      className={`flex w-full items-center gap-4 border-b border-[#f0f3ee] px-5 py-4 text-left transition hover:bg-[#f7faf6] ${active === index ? "bg-[#edf3ed]" : "bg-white"}`}
+      onClick={() => { setActive(index); setCurrentChat(data); setUserData(user); setActiveStatus(online); handleClick(data._id); }}
     >
       <div className="relative">
         <img
           src={`${user?.avatar?.url}`}
           alt=""
-          className="w-[50px] h-[50px] rounded-full"
+          className="h-12 w-12 rounded-full border border-[#e5ebe3] object-cover"
         />
         {online ? (
           <div className="w-[12px] h-[12px] bg-green-400 rounded-full absolute top-[2px] right-[2px]" />
@@ -320,7 +310,7 @@ const MessageList = ({
           {data?.lastMessage}
         </p>
       </div>
-    </div>
+    </button>
   );
 };
 
@@ -337,14 +327,14 @@ const SellerInbox = ({
   handleImageUpload,
 }) => {
   return (
-    <div className="w-[full] min-h-full flex flex-col justify-between p-5">
+    <div className="mx-auto flex min-h-[calc(100vh-110px)] w-full max-w-6xl flex-col justify-between bg-[#f7f9f6] p-3 sm:p-6">
       {/* message header */}
-      <div className="w-full flex p-3 items-center justify-between bg-slate-200">
+      <div className="flex w-full items-center justify-between rounded-t-[22px] border border-[#e5ebe3] bg-white p-4 shadow-sm">
         <div className="flex">
           <img
             src={`${userData?.avatar?.url}`}
             alt=""
-            className="w-[60px] h-[60px] rounded-full"
+            className="h-12 w-12 rounded-full border border-[#e5ebe3] object-cover"
           />
           <div className="pl-3">
             <h1 className="text-[18px] font-[600]">{userData?.name}</h1>
@@ -359,7 +349,7 @@ const SellerInbox = ({
       </div>
 
       {/* messages */}
-      <div className="px-3 h-[75vh] py-3 overflow-y-scroll">
+      <div className="h-[68vh] overflow-y-auto border-x border-[#e5ebe3] bg-[#fbfcfa] px-4 py-5 sm:px-7">
         {messages &&
           messages.map((item, index) => (
             <div
@@ -385,9 +375,9 @@ const SellerInbox = ({
               {item.text !== "" && (
                 <div>
                   <div
-                    className={`w-max p-2 rounded ${
-                      item.sender === sellerId ? "bg-[#000]" : "bg-[#38c776]"
-                    } text-[#fff] h-min`}
+                    className={`max-w-[min(78vw,560px)] rounded-2xl px-4 py-3 shadow-sm ${
+                      item.sender === sellerId ? "rounded-br-md bg-[#315c46] text-white" : "rounded-bl-md border border-[#e7ece5] bg-white text-[#344238]"
+                    } h-min`}
                   >
                     <p>{item.text}</p>
                   </div>
@@ -403,7 +393,7 @@ const SellerInbox = ({
 
       {/* send message input */}
       <form
-        className="p-3 relative w-full flex justify-between items-center"
+        className="relative flex w-full items-center gap-3 rounded-b-[22px] border border-t-0 border-[#e5ebe3] bg-white p-4 shadow-sm"
         onSubmit={sendMessageHandler}
       >
         <div className="w-[30px]">
@@ -425,13 +415,13 @@ const SellerInbox = ({
             placeholder="Enter your message..."
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
-            className={`${styles.input}`}
+            className="h-12 w-full rounded-xl border border-[#e3e9e1] bg-[#f8faf7] px-4 pr-12 text-sm text-[#344238] outline-none transition focus:border-[#315c46] focus:ring-4 focus:ring-[#315c46]/10"
           />
           <input type="submit" value="Send" className="hidden" id="send" />
           <label htmlFor="send">
             <AiOutlineSend
               size={20}
-              className="absolute right-4 top-5 cursor-pointer"
+              className="absolute right-7 top-1/2 -translate-y-1/2 cursor-pointer text-[#315c46]"
             />
           </label>
         </div>
