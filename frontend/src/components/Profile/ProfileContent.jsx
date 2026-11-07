@@ -72,85 +72,24 @@ const ProfileContent = ({ active }) => {
     <div className="w-full">
       {/* profile Page */}
       {active === 1 && (
-        <>
-          <div className="flex justify-center w-full">
+        <div className="space-y-6">
+          <div className="flex flex-col items-center gap-4 rounded-2xl bg-[#f7f9f6] p-5 sm:flex-row sm:p-6">
             <div className="relative">
-              <img
-                src={`${user?.avatar?.url}`}
-                className="w-[150px] h-[150px] rounded-full object-cover border-[3px] border-[#3ad132]"
-                alt=""
-              />
-              <div className="w-[30px] h-[30px] bg-[#E3E9EE] rounded-full flex items-center justify-center cursor-pointer absolute bottom-[5px] right-[5px]">
-                <label htmlFor="image">
-                  <AiOutlineCamera />
-                  <input
-                    type="file"
-                    id="image"
-                    className="hidden"
-                    onChange={handleImage}
-                  />
-                </label>
-              </div>
+              <img src={user?.avatar?.url || "https://placehold.co/160x160/eaf1e9/315c46?text=You"} className="h-24 w-24 rounded-2xl border-4 border-white object-cover shadow-sm" alt="Your profile"/>
+              <label htmlFor="image" className="absolute -bottom-2 -right-2 flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl border-2 border-white bg-[#315c46] text-white shadow-sm hover:bg-[#244735]"><AiOutlineCamera size={18}/><input type="file" id="image" accept="image/*" className="hidden" onChange={handleImage}/></label>
             </div>
+            <div className="text-center sm:text-left"><p className="text-sm font-extrabold text-[#344238]">{user?.name}</p><p className="mt-1 text-xs text-[#87938a]">{user?.email}</p><p className="mt-2 text-[11px] text-[#9aa49c]">Choose the camera icon to update your profile photo.</p></div>
           </div>
-          <br />
-          <br />
-          <div className="w-full px-5">
-            <form onSubmit={handleSubmit} aria-required={true}>
-              <div className="w-full 800px:flex block pb-3">
-                <div className=" w-[100%] 800px:w-[50%]">
-                  <label className="block pb-2">Full Name</label>
-                  <input
-                    type="text"
-                    className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
-                    required
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                  />
-                </div>
-                <div className=" w-[100%] 800px:w-[50%]">
-                  <label className="block pb-2">Email Address</label>
-                  <input
-                    type="text"
-                    className={`${styles.input} !w-[95%] mb-1 800px:mb-0`}
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                </div>
-              </div>
-
-              <div className="w-full 800px:flex block pb-3">
-                <div className=" w-[100%] 800px:w-[50%]">
-                  <label className="block pb-2">Phone Number</label>
-                  <input
-                    type="number"
-                    className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
-                    required
-                    value={phoneNumber}
-                    onChange={(e) => setPhoneNumber(e.target.value)}
-                  />
-                </div>
-                <div className=" w-[100%] 800px:w-[50%]">
-                  <label className="block pb-2">Password</label>
-                  <input
-                    type="password"
-                    className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
-                    required
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
-                </div>
-              </div>
-              <input
-                className={`w-[250px] h-[40px] border border-[#3a24db] text-center text-[#3a24db] rounded-[3px] mt-8 cursor-pointer`}
-                required
-                value="Update"
-                type="submit"
-              />
-            </form>
-          </div>
-        </>
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div><label className="mb-2 block text-xs font-bold text-[#536157]">Full name</label><input type="text" className="h-12 w-full rounded-xl border border-[#e3e9e1] bg-[#fbfcfa] px-4 text-sm text-[#344238] outline-none transition focus:border-[#315c46] focus:ring-4 focus:ring-[#315c46]/10" required value={name||""} onChange={e=>setName(e.target.value)}/></div>
+              <div><label className="mb-2 block text-xs font-bold text-[#536157]">Email address</label><input type="email" className="h-12 w-full rounded-xl border border-[#e3e9e1] bg-[#fbfcfa] px-4 text-sm text-[#344238] outline-none transition focus:border-[#315c46] focus:ring-4 focus:ring-[#315c46]/10" required value={email||""} onChange={e=>setEmail(e.target.value)}/></div>
+              <div><label className="mb-2 block text-xs font-bold text-[#536157]">Phone number</label><input type="tel" className="h-12 w-full rounded-xl border border-[#e3e9e1] bg-[#fbfcfa] px-4 text-sm text-[#344238] outline-none transition focus:border-[#315c46] focus:ring-4 focus:ring-[#315c46]/10" value={phoneNumber||""} onChange={e=>setPhoneNumber(e.target.value)}/></div>
+              <div><label className="mb-2 block text-xs font-bold text-[#536157]">Confirm with password</label><input type="password" className="h-12 w-full rounded-xl border border-[#e3e9e1] bg-[#fbfcfa] px-4 text-sm text-[#344238] outline-none transition focus:border-[#315c46] focus:ring-4 focus:ring-[#315c46]/10" placeholder="Enter password to save changes" value={password} onChange={e=>setPassword(e.target.value)}/></div>
+            </div>
+            <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[#edf0eb] pt-5"><p className="text-[11px] text-[#929d94]">Update your details and save when you're ready.</p><button type="submit" className="inline-flex h-11 items-center justify-center rounded-xl bg-[#315c46] px-7 text-sm font-extrabold text-white shadow-[0_7px_16px_rgba(49,92,70,.13)] transition hover:bg-[#244735]">Save changes</button></div>
+          </form>
+        </div>
       )}
       {/* order */}
       {active === 2 && (
