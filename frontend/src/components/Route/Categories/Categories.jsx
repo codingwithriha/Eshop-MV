@@ -25,7 +25,7 @@ const Categories = () => {
           {categoriesData?.map((item)=>(
             <button type="button" key={item.id} onClick={()=>navigate(`/products?category=${item.title}`)} className="group flex min-h-[116px] items-center justify-between overflow-hidden rounded-[17px] border border-[#edf0eb] bg-[#f8f9f6] p-4 text-left transition duration-300 hover:-translate-y-1 hover:border-[#d7e1d6] hover:bg-[#f0f4ef] hover:shadow-[0_12px_28px_rgba(34,55,42,.07)]">
               <span className="max-w-[55%] font-display text-[15px] font-bold leading-5 text-[#334238]">{item.title}<span className="mt-3 flex items-center gap-1 text-[11px] font-semibold text-[#718276]">Explore <FiArrowUpRight className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"/></span></span>
-              <img src={item.imageUrl} alt={item.title} loading="lazy" className="h-[88px] w-[104px] object-contain transition duration-500 group-hover:scale-110"/>
+              <img src={item.imageUrl || item.image_Url || item.image_Url?.url} onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = `https://placehold.co/240x180/f0f3ee/315c46?text=${encodeURIComponent(item.title)}`; }} alt={item.title} loading="lazy" className="h-[88px] w-[104px] object-contain transition duration-500 group-hover:scale-110"/>
             </button>
           ))}
         </div>
