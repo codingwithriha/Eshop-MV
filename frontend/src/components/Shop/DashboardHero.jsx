@@ -8,6 +8,7 @@ import { getAllOrdersOfShop } from "../../redux/actions/order";
 import { getAllProductsShop } from "../../redux/actions/product";
 import Button from "@mui/material/Button";
 import { DataGrid } from "@mui/x-data-grid";
+import DashboardAnalytics from "../Layout/DashboardAnalytics";
 
 const DashBoardHero = () => {
   const dispatch = useDispatch();
@@ -135,8 +136,10 @@ const DashBoardHero = () => {
         </div>
       </div>
 
+      <DashboardAnalytics orders={Array.isArray(orders) ? orders : []} heading="Your sales performance" />
+
       {/* Latest Orders Table */}
-      <div className="bg-white rounded-2xl border border-[#e7ebe5] shadow-sm p-5 sm:p-6">
+      <div className="mt-6 bg-white rounded-2xl border border-[#e7ebe5] shadow-sm p-5 sm:p-6">
         <h3 className="font-display text-xl font-extrabold pb-1 text-[#26372d]">Latest Orders</h3>
         <p className="mb-4 text-xs text-[#879188]">Your latest customer purchases and order status.</p><div className="w-full min-h-[45vh]">
           <DataGrid
