@@ -1,179 +1,28 @@
 import React from "react";
-import {
-  FaTwitter,
-  FaFacebook,
-  FaInstagram,
-  FaGithub,
-  FaLinkedin,
-} from "react-icons/fa";
-import {
-  footerCompanyLinks,
-  footerProductLinks,
-  footerSupportLinks,
-} from "../../static/data";
+import { FaTwitter,FaFacebook,FaInstagram,FaGithub,FaLinkedin } from "react-icons/fa";
+import { FiArrowUpRight,FiMail } from "react-icons/fi";
+import { footerCompanyLinks,footerProductLinks,footerSupportLinks } from "../../static/data";
 import { Link } from "react-router-dom";
 
 const Footer = () => {
+  const linkGroups=[{title:"Discover",items:footerProductLinks},{title:"Marketplace",items:footerCompanyLinks},{title:"Help & support",items:footerSupportLinks}];
   return (
-    <div className="text-white bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
-      {/* Newsletter Section */}
-      <div className="md:flex md:justify-between md:items-center sm:px-12 px-4 bg-gradient-to-r from-blue-600 to-purple-600 py-10">
-        <div className="lg:w-2/5">
-          <h1 className="lg:text-3xl font-bold text-2xl md:mb-0 mb-4 lg:leading-normal">
-            <span className="text-yellow-300">Subscribe</span> for Latest News,
-            <br />
-            Events & Exclusive Offers
-          </h1>
-        </div>
-        <div className="flex flex-col sm:flex-row gap-3">
-          <input
-            type="email"
-            className="text-gray-800 sm:w-80 w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-300"
-            required
-            placeholder="Enter your email..."
-          />
-          <button className="bg-yellow-400 hover:bg-yellow-300 duration-300 px-6 py-3 rounded-lg text-gray-900 font-semibold sm:w-auto w-full transition-all hover:shadow-lg">
-            Subscribe
-          </button>
-        </div>
+    <footer className="mt-16 bg-[#1f3026] text-white">
+      <div className="store-section relative -top-8 rounded-[22px] bg-[#e9eee7] px-6 py-8 text-[#26372d] shadow-[0_18px_45px_rgba(0,0,0,.12)] sm:px-9 md:flex md:items-center md:justify-between md:gap-8">
+        <div className="max-w-lg"><span className="text-[10px] font-bold uppercase tracking-[.18em] text-[#54745e]">Stay in the know</span><h2 className="mt-2 font-display text-2xl font-extrabold tracking-tight sm:text-3xl">Good finds, straight to your inbox.</h2><p className="mt-2 text-sm leading-6 text-[#69766d]">Get updates on new arrivals, special events and marketplace news.</p></div>
+        <form className="mt-6 flex w-full max-w-md gap-2 md:mt-0" onSubmit={(e)=>e.preventDefault()}>
+          <label className="flex min-w-0 flex-1 items-center gap-2 rounded-full border border-[#d8e0d6] bg-white px-4"><FiMail className="shrink-0 text-[#718276]"/><input type="email" aria-label="Email address" className="h-12 min-w-0 w-full bg-transparent text-sm outline-none placeholder:text-[#9aa49c]" placeholder="Your email address"/></label>
+          <button type="submit" className="rounded-full bg-[#315c46] px-5 text-sm font-bold text-white transition hover:bg-[#244735]">Join</button>
+        </form>
       </div>
-
-      {/* Main Footer Content */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:px-12 px-6 py-16">
-        {/* Brand Section */}
-        <ul className="flex flex-col">
-          <div className="mb-6">
-            <img
-              src="https://shopo.quomodothemes.website/assets/images/logo.svg"
-              alt="logo"
-              className="h-10 filter brightness-0 invert mb-4"
-            />
-            <p className="text-gray-400 text-sm leading-relaxed">
-              Your premium destination for home decor and lifestyle products. 
-              Quality meets elegance in every product we offer.
-            </p>
-          </div>
-          <div className="flex items-center gap-4 mt-4">
-            <a
-              href="https://twitter.com/RihaShehzadi"
-              target="_blank"
-              rel="noreferrer"
-              className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-blue-500 transition-all duration-300"
-            >
-              <FaTwitter size={18} />
-            </a>
-            <a
-              href="https://github.com/codingwithriha"
-              target="_blank"
-              rel="noreferrer"
-              className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-gray-600 transition-all duration-300"
-            >
-              <FaGithub size={18} />
-            </a>
-            <a
-              href="https://instagram.com/riha_shahzadi"
-              target="_blank"
-              rel="noreferrer"
-              className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-pink-600 transition-all duration-300"
-            >
-              <FaInstagram size={18} />
-            </a>
-            <a
-              href="https://linkedin.com/in/riha-shahzadi"
-              target="_blank"
-              rel="noreferrer"
-              className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-blue-700 transition-all duration-300"
-            >
-              <FaLinkedin size={18} />
-            </a>
-            <a
-              href="https://facebook.com/100077588075894"
-              target="_blank"
-              rel="noreferrer"
-              className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-blue-600 transition-all duration-300"
-            >
-              <FaFacebook size={18} />
-            </a>
-          </div>
-        </ul>
-
-        {/* Company Links */}
-        <ul className="flex flex-col">
-          <h1 className="mb-6 font-bold text-lg text-white">Company</h1>
-          {footerProductLinks &&
-            footerProductLinks.map((i, index) => {
-              return (
-                <li key={index}>
-                  <Link
-                    className="text-gray-400 hover:text-yellow-300 duration-300 text-sm cursor-pointer leading-7 block transition-colors"
-                    to={i.link}
-                  >
-                    {i.name}
-                  </Link>
-                </li>
-              );
-            })}
-        </ul>
-
-        {/* Shop Links */}
-        <ul className="flex flex-col">
-          <h1 className="mb-6 font-bold text-lg text-white">Shop</h1>
-          {footerCompanyLinks &&
-            footerCompanyLinks.map((i, index) => {
-              return (
-                <li key={index}>
-                  <Link
-                    className="text-gray-400 hover:text-yellow-300 duration-300 text-sm cursor-pointer leading-7 block transition-colors"
-                    to={i.link}
-                  >
-                    {i.name}
-                  </Link>
-                </li>
-              );
-            })}
-        </ul>
-
-        {/* Support Links */}
-        <ul className="flex flex-col">
-          <h1 className="mb-6 font-bold text-lg text-white">Support</h1>
-          {footerSupportLinks &&
-            footerSupportLinks.map((i, index) => {
-              return (
-                <li key={index}>
-                  <Link
-                    className="text-gray-400 hover:text-yellow-300 duration-300 text-sm cursor-pointer leading-7 block transition-colors"
-                    to={i.link}
-                  >
-                    {i.name}
-                  </Link>
-                </li>
-              );
-            })}
-        </ul>
+      <div className="store-section grid gap-12 pb-12 pt-2 sm:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr_1fr]">
+        <div><Link to="/" className="inline-flex items-center gap-3"><span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#d9bd91] font-display text-lg font-extrabold text-[#26372d]">E</span><span className="font-display text-xl font-extrabold tracking-tight">eshop<span className="text-[#d9bd91]">.</span></span></Link><p className="mt-5 max-w-xs text-sm leading-7 text-white/60">A multi-vendor marketplace bringing independent sellers and thoughtful product discovery together.</p><div className="mt-6 flex gap-2">
+          {[[FaTwitter,"https://twitter.com/RihaShehzadi"],[FaGithub,"https://github.com/codingwithriha"],[FaInstagram,"https://instagram.com/riha_shahzadi"],[FaLinkedin,"https://linkedin.com/in/riha-shahzadi"],[FaFacebook,"https://facebook.com/100077588075894"]].map(([Icon,url],i)=><a key={i} href={url} target="_blank" rel="noreferrer" aria-label="Social profile" className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 text-white/70 transition hover:border-[#d9bd91] hover:bg-white/10 hover:text-[#d9bd91]"><Icon size={16}/></a>)}
+        </div></div>
+        {linkGroups.map(group=><div key={group.title}><h3 className="mb-5 font-display text-sm font-bold text-white">{group.title}</h3><ul className="space-y-3">{group.items?.map((item,index)=><li key={index}><Link to={item.link} className="inline-flex items-center gap-1 text-sm text-white/60 transition hover:text-[#d9bd91]">{item.name}<FiArrowUpRight className="opacity-0 transition group-hover:opacity-100"/></Link></li>)}</ul></div>)}
       </div>
-
-      {/* Bottom Footer */}
-      <div className="border-t border-gray-700">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 text-center pt-8 text-gray-400 text-sm pb-8 sm:px-12 px-6">
-          <span className="text-left sm:text-center">
-            © Codingwithriha {new Date().getFullYear()}. All rights reserved.
-          </span>
-          <div className="flex justify-center gap-6">
-            <Link to="#" className="hover:text-yellow-300 transition-colors">Terms</Link>
-            <Link to="#" className="hover:text-yellow-300 transition-colors">Privacy</Link>
-            <Link to="#" className="hover:text-yellow-300 transition-colors">Policy</Link>
-          </div>
-          <div className="flex justify-center sm:justify-end items-center">
-            <img
-              src="https://hamart-shop.vercel.app/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Ffooter-payment.a37c49ac.png&w=640&q=75"
-              alt="payment-methods"
-              className="h-8"
-            />
-          </div>
-        </div>
-      </div>
-    </div>
+      <div className="border-t border-white/10"><div className="store-section flex flex-col gap-3 py-5 text-xs text-white/45 sm:flex-row sm:items-center sm:justify-between"><span>© {new Date().getFullYear()} Eshop-MV. All rights reserved.</span><span>Designed with care · Built for discovery</span></div></div>
+    </footer>
   );
 };
-
 export default Footer;
