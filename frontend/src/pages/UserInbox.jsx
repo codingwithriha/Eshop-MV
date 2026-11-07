@@ -229,6 +229,15 @@ const UserInbox = () => {
                 loading={loading}
               />
             ))}
+          {conversations.length === 0 && (
+            <div className="px-6 py-16 text-center">
+              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[#edf3ed] text-2xl text-[#315c46]">✉</div>
+              <h2 className="mt-4 font-display text-lg font-extrabold text-[#344238]">No conversations yet</h2>
+              <p className="mt-1 text-sm text-[#87938a]">When you contact a shop, your messages will appear here.</p>
+            </div>
+          )}
+          </div>
+          </section>
         </>
       )}
 
