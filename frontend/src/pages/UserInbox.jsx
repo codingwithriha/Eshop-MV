@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import Header from "../components/Layout/Header";
 import { useSelector } from "react-redux";
-import socketIO from "socket.io-client";
+import socketId from "../socket";
 import { format } from "timeago.js";
 import { server } from "../server";
 import axios from "axios";
@@ -9,9 +9,6 @@ import { useNavigate } from "react-router-dom";
 import { AiOutlineArrowRight, AiOutlineSend } from "react-icons/ai";
 import { TfiGallery } from "react-icons/tfi";
 import styles from "../styles/styles";
-const ENDPOINT =
-  process.env.REACT_APP_SOCKET_URL || "https://eshop-mv-socket.up.railway.app";
-const socketId = socketIO(ENDPOINT, { transports: ["websocket"] });
 
 const UserInbox = () => {
   const { user,loading } = useSelector((state) => state.user);
