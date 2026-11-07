@@ -34,7 +34,7 @@ const Login=()=>{
       <button disabled={loading} className="inline-flex h-[52px] w-full items-center justify-center gap-2 rounded-full bg-[#315c46] px-6 text-sm font-bold text-white shadow-[0_10px_24px_rgba(49,92,70,.18)] transition hover:-translate-y-0.5 hover:bg-[#244735] disabled:opacity-60">{loading?"Signing you in…":"Sign in"}<FiArrowRight/></button>
      </form>
      <p className="mt-7 text-center text-sm text-[#7b867e]">New to Eshop? <Link to="/signup" className="font-bold text-[#315c46] hover:text-[#244735]">Create an account</Link></p>
-     <div className="mt-8 border-t border-[#edf0eb] pt-6 text-center"><Link to="/shop-login" className="inline-flex items-center gap-2 text-xs font-semibold text-[#7b867e] hover:text-[#315c46]"><FiShoppingBag/> Are you a seller? Sign in to your shop</Link></div>
+     <div className="mt-8 space-y-3 border-t border-[#edf0eb] pt-6 text-center"><Link to="/shop-login" className="inline-flex items-center gap-2 text-xs font-semibold text-[#7b867e] hover:text-[#315c46]"><FiShoppingBag/> Are you a seller? Sign in to your shop</Link><div><Link to="/admin-login" className="text-[11px] font-semibold text-[#9aa49c] hover:text-[#315c46]">Administrator sign in</Link></div></div>
     </div></section>
    </div>
   </div>
