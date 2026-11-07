@@ -1,10 +1,12 @@
 import React from "react";
-const brands=["dell","hp","Lenovo","SAMSUNG","SONY","ASUS","LG","Apple"];
-const Sponsored=()=>(
- <section className="mx-auto my-10 w-full max-w-[1440px] overflow-hidden rounded-[24px] border border-[#e6ece5] bg-white px-5 py-7 shadow-[0_8px_28px_rgba(35,52,40,.035)] sm:px-8">
-  <div className="mb-5 flex flex-wrap items-end justify-between gap-2"><div><p className="text-[10px] font-extrabold uppercase tracking-[.2em] text-[#91a096]">Brands you know</p><h2 className="mt-1 font-display text-lg font-extrabold text-[#2d3c32]">Shop trusted names</h2></div><span className="text-xs text-[#89968c]">A few favourites, all in one place</span></div>
-  <div className="brand-marquee relative overflow-hidden" aria-label="Featured brands"><div className="brand-track flex w-max items-center gap-5 py-2">{[...brands,...brands].map((brand,i)=><div key={i} className="flex h-[76px] w-[160px] shrink-0 items-center justify-center rounded-2xl border border-[#edf0eb] bg-[#fafbf9] px-5 text-2xl font-black tracking-tight text-[#53645a] transition hover:border-[#d8e3d8] hover:bg-[#f0f5ef]">{brand}</div>)}</div></div>
-  <style>{`@keyframes eshop-marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}.brand-track{animation:eshop-marquee 30s linear infinite}.brand-marquee:hover .brand-track{animation-play-state:paused}@media(prefers-reduced-motion:reduce){.brand-track{animation:none}}`}</style>
- </section>
-);
+const brands=[{name:"DELL",tag:"Technology"},{name:"hp",tag:"Computing"},{name:"Lenovo",tag:"Innovation"},{name:"SAMSUNG",tag:"Electronics"},{name:"SONY",tag:"Entertainment"},{name:"ASUS",tag:"Performance"},{name:"LG",tag:"Lifestyle"},{name:"Apple",tag:"Premium tech"}];
+const Sponsored=()=> <section className="mx-auto my-12 w-full max-w-[1440px] px-4 sm:px-6">
+ <div className="relative overflow-hidden rounded-[30px] bg-[#263e31] px-6 py-8 text-white shadow-[0_18px_44px_rgba(38,62,49,.13)] sm:px-10 sm:py-10">
+  <div className="pointer-events-none absolute -right-16 -top-28 h-72 w-72 rounded-full border border-white/10"/><div className="pointer-events-none absolute -right-2 -top-16 h-52 w-52 rounded-full border border-white/10"/>
+  <div className="relative z-10 mb-7 flex flex-wrap items-end justify-between gap-4"><div><p className="text-[10px] font-extrabold uppercase tracking-[.24em] text-[#d9bd91]">The names you trust</p><h2 className="mt-2 font-display text-2xl font-extrabold tracking-tight sm:text-3xl">Big brands. Better finds.</h2><p className="mt-2 max-w-lg text-sm leading-6 text-white/65">Explore popular names across technology, electronics and everyday essentials.</p></div><span className="rounded-full border border-white/20 bg-white/10 px-4 py-2 text-[10px] font-bold uppercase tracking-[.16em] text-white/75">Featured brands</span></div>
+  <div className="brand-marquee relative overflow-hidden"><div className="brand-track flex w-max items-stretch gap-3 py-2">{[...brands,...brands].map((brand,i)=><div key={i} className="group flex h-[94px] w-[178px] shrink-0 flex-col items-center justify-center rounded-2xl border border-white/10 bg-white/[.07] px-5 transition duration-300 hover:-translate-y-1 hover:border-[#d9bd91]/50 hover:bg-white/[.13]"><span className="font-display text-[25px] font-black tracking-tight text-white">{brand.name}</span><span className="mt-1 text-[9px] font-bold uppercase tracking-[.18em] text-white/45">{brand.tag}</span></div>)}</div></div>
+  <div className="relative z-10 mt-6 flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[.16em] text-white/45"><span className="h-px w-8 bg-[#d9bd91]/70"/>Discover brands worth knowing</div>
+ </div>
+ <style>{`@keyframes eshop-marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}.brand-track{animation:eshop-marquee 34s linear infinite}.brand-marquee:hover .brand-track{animation-play-state:paused}@media(prefers-reduced-motion:reduce){.brand-track{animation:none}}`}</style>
+</section>;
 export default Sponsored;
