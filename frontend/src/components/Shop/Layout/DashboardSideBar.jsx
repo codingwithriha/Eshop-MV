@@ -25,11 +25,11 @@ const DashboardSideBar = ({ active }) => {
   ];
 
   return (
-    <div className="w-full h-[89vh] bg-gradient-to-b from-gray-50 to-white shadow-lg overflow-y-auto sticky top-0 left-0 z-10 border-r border-gray-100">
+    <div className="w-full h-[89vh] bg-[#fbfcfa] shadow-none overflow-y-auto sticky top-0 left-0 z-10 border-r border-[#e5ebe3]">
       
       {/* Header */}
       <div className="p-6 border-b border-gray-100">
-        <h3 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+        <h3 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 text-[#315c46]">
           Seller Portal
         </h3>
 
@@ -50,8 +50,8 @@ const DashboardSideBar = ({ active }) => {
               to={item.path}
               className={`w-full flex items-center px-6 py-3 mx-3 mb-2 rounded-xl transition-all duration-200 group ${
                 isActive
-                  ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-md"
-                  : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                  ? "bg-[#315c46] text-white shadow-[0_8px_20px_rgba(49,92,70,.18)]"
+                  : "text-[#69766d] hover:bg-[#edf2ec] hover:text-[#244735]"
               }`}
             >
               <Icon
