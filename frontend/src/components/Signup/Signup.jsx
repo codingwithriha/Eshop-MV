@@ -1,241 +1,30 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-import { RxAvatar } from "react-icons/rx";
-import { server } from "../../server.js";
+import React,{useState} from "react";
+import {Link,useNavigate} from "react-router-dom";
+import {AiOutlineEye,AiOutlineEyeInvisible} from "react-icons/ai";
+import {RxAvatar} from "react-icons/rx";
+import {FiArrowLeft,FiArrowRight,FiCheckCircle,FiMail,FiUser,FiLock,FiUploadCloud} from "react-icons/fi";
+import {server} from "../../server.js";
 import axios from "axios";
-import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import {toast} from "react-toastify";
 
-const SignUp = () => {
-  const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
-  const [password, setPassword] = useState("");
-  const [visible, setVisible] = useState(false);
-  const [avatar, setAvatar] = useState(null);
-
-  //Handle the file Input Change
-  const handleFileInputChange = (e) => {
-    const file = e.target.files[0];
-
-    if (!file) return;
-
-    const reader = new FileReader();
-
-    reader.onload = (event) => {
-      const img = new Image();
-
-      img.onload = () => {
-        const canvas = document.createElement("canvas");
-
-        const MAX_WIDTH = 500;
-
-        const scale = MAX_WIDTH / img.width;
-
-        canvas.width = MAX_WIDTH;
-        canvas.height = img.height * scale;
-
-        const ctx = canvas.getContext("2d");
-
-        ctx.drawImage(
-          img,
-          0,
-          0,
-          canvas.width,
-          canvas.height
-        );
-
-        // compress image
-        const compressedImage = canvas.toDataURL(
-          "image/jpeg",
-          0.7
-        );
-
-        setAvatar(compressedImage);
-      };
-
-      img.src = event.target.result;
-    };
-
-    reader.readAsDataURL(file);
-  };
-
-  // Handle form Submission
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    await axios
-      .post(
-        `${server}/user/create-user`,
-        { name, email, password, avatar }
-      )
-      .then((res) => {
-        toast.success(res.data.message);
-        setName("");
-        setEmail("");
-        setPassword("");
-        setAvatar();
-        navigate("/login");
-      })
-      .catch((error) => {
-        toast.error(error.response?.data?.message);
-      });
-  };
-
-  return (
-    <div className="min-h-screen bg-[#f7f8f5] flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="text-center mb-8">
-          <h2 className="text-4xl font-bold text-[#315c46] bg-clip-text text-transparent">
-            Create Account
-          </h2>
-          <p className="mt-2 text-gray-600">Join us and start shopping today</p>
-        </div>
-      </div>
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-10 px-8 shadow-2xl rounded-2xl sm:px-10 border border-gray-100">
-          <form className="space-y-6" onSubmit={handleSubmit}>
-            {/* Input for name */}
-            <div>
-              <label
-                htmlFor="name"
-                className="block text-sm font-semibold text-gray-700 mb-2"
-              >
-                Full Name
-              </label>
-              <div className="relative">
-                <input
-                  type="text"
-                  name="name"
-                  autoComplete="name"
-                  required
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="appearance-none block w-full px-4 py-3 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#315c46] focus:border-transparent transition-all"
-                  placeholder="Enter your full name"
-                />
-              </div>
-            </div>
-
-            {/* Input for Email */}
-            <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-semibold text-gray-700 mb-2"
-              >
-                Email Address
-              </label>
-              <div className="relative">
-                <input
-                  type="email"
-                  name="email"
-                  autoComplete="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="appearance-none block w-full px-4 py-3 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                  placeholder="Enter your email"
-                />
-              </div>
-            </div>
-
-            {/* Input for Password */}
-            <div>
-              <label
-                htmlFor="password"
-                className="block text-sm font-semibold text-gray-700 mb-2"
-              >
-                Password
-              </label>
-              <div className="relative">
-                <input
-                  type={visible ? "text" : "password"}
-                  name="password"
-                  autoComplete="current-password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="appearance-none block w-full px-4 py-3 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all pr-12"
-                  placeholder="Create a password"
-                />
-                {/* toggle visibility Password */}
-                <button
-                  type="button"
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-                  onClick={() => setVisible(!visible)}
-                >
-                  {visible ? (
-                    <AiOutlineEye size={22} />
-                  ) : (
-                    <AiOutlineEyeInvisible size={22} />
-                  )}
-                </button>
-              </div>
-            </div>
-
-            {/* Input for Avatar */}
-            <div>
-              <label
-                htmlFor="avatar"
-                className="block text-sm font-semibold text-gray-700 mb-2"
-              >
-                Profile Avatar
-              </label>
-              <div className="mt-2 flex items-center gap-4">
-                <div className="relative">
-                  <span className="inline-block h-16 w-16 rounded-full overflow-hidden border-2 border-gray-200 bg-gray-50 flex items-center justify-center">
-                    {avatar ? (
-                      <img
-                        src={avatar}
-                        alt="avatar"
-                        className="h-full w-full object-cover"
-                      />
-                    ) : (
-                      <RxAvatar className="h-10 w-10 text-gray-400" />
-                    )}
-                  </span>
-                </div>
-                {/* File Input for Avatar */}
-                <label
-                  htmlFor="file-input"
-                  className="flex items-center px-4 py-2.5 border-2 border-dashed border-gray-300 rounded-lg text-sm font-medium text-gray-600 bg-gray-50 hover:bg-gray-100 hover:border-blue-400 cursor-pointer transition-all"
-                >
-                  <span>Upload Avatar</span>
-                  <input
-                    type="file"
-                    name="avatar"
-                    id="file-input"
-                    accept="image/*"
-                    onChange={handleFileInputChange}
-                    className="sr-only"
-                  />
-                </label>
-              </div>
-            </div>
-
-            {/* Submit Button */}
-            <div>
-              <button
-                type="submit"
-                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-lg text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300 transform hover:scale-[1.02]"
-              >
-                Create Account
-              </button>
-            </div>
-
-            {/* Link to the Login*/}
-            <div className="flex items-center justify-center w-full pt-4">
-              <p className="text-gray-600">Already have an account?</p>
-              <Link to="/login" className="ml-2 text-blue-600 font-semibold hover:text-blue-700 transition-colors">
-                Sign In
-              </Link>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-  );
+const SignUp=()=>{
+ const navigate=useNavigate();const [email,setEmail]=useState("");const [name,setName]=useState("");const [password,setPassword]=useState("");const [visible,setVisible]=useState(false);const [avatar,setAvatar]=useState(null);const [loading,setLoading]=useState(false);
+ const handleFileInputChange=(e)=>{const file=e.target.files?.[0];if(!file)return;if(!file.type.startsWith("image/")){toast.error("Please choose an image file.");return;}const reader=new FileReader();reader.onload=(event)=>{const img=new Image();img.onload=()=>{const canvas=document.createElement("canvas");const scale=Math.min(1,500/img.width);canvas.width=Math.round(img.width*scale);canvas.height=Math.round(img.height*scale);const ctx=canvas.getContext("2d");ctx.drawImage(img,0,0,canvas.width,canvas.height);setAvatar(canvas.toDataURL("image/jpeg",.75));};img.src=event.target.result;};reader.readAsDataURL(file);};
+ const handleSubmit=async(e)=>{e.preventDefault();if(loading)return;setLoading(true);try{const res=await axios.post(`${server}/user/create-user`,{name,email,password,avatar});toast.success(res.data.message||"Account created successfully.");navigate("/login");}catch(error){toast.error(error.response?.data?.message||"Unable to create your account. Please try again.");}finally{setLoading(false);}};
+ const field="mt-2 h-12 w-full rounded-xl border border-[#e2e8e0] bg-[#fbfcfa] px-4 text-sm text-[#26352b] outline-none transition placeholder:text-[#a0aaa2] focus:border-[#315c46] focus:bg-white focus:ring-4 focus:ring-[#315c46]/[.07]";
+ return <main className="min-h-screen bg-[#f5f7f3] px-4 py-8 sm:px-6 sm:py-12"><div className="mx-auto max-w-5xl"><Link to="/" className="inline-flex items-center gap-2 text-xs font-bold text-[#718076] hover:text-[#315c46]"><FiArrowLeft/> Back to marketplace</Link>
+  <div className="mt-6 grid overflow-hidden rounded-[28px] border border-[#e5ebe3] bg-white shadow-[0_24px_80px_rgba(32,41,35,.08)] lg:grid-cols-[.82fr_1.18fr]">
+   <section className="relative flex flex-col justify-between overflow-hidden bg-[#20372a] p-8 text-white sm:p-10 lg:p-12"><div className="absolute -right-24 -top-20 h-72 w-72 rounded-full border border-white/10"/><div className="relative"><span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#d9bd91] text-xl font-extrabold text-[#26372d]">E</span><p className="mt-10 text-[10px] font-extrabold uppercase tracking-[.2em] text-[#d9bd91]">Join the marketplace</p><h1 className="mt-4 max-w-sm font-display text-4xl font-extrabold leading-[1.08] tracking-[-.05em] sm:text-5xl">Make room for something good.</h1><p className="mt-5 max-w-sm text-sm leading-7 text-white/65">Create your account and make shopping feel a little more personal.</p></div><div className="relative mt-12 space-y-4">{["Keep your orders in one place","Save time at checkout","Discover products from independent shops"].map(x=><div key={x} className="flex items-center gap-3 text-sm text-white/80"><FiCheckCircle className="text-[#d9bd91]"/>{x}</div>)}</div></section>
+   <section className="flex items-center p-6 sm:p-10 lg:p-12"><div className="mx-auto w-full max-w-md"><span className="text-[10px] font-extrabold uppercase tracking-[.18em] text-[#66806e]">Get started</span><h2 className="mt-2 font-display text-3xl font-extrabold tracking-[-.04em] text-[#202923]">Create your account</h2><p className="mt-2 text-sm leading-6 text-[#7b867e]">A few details and you’ll be ready to explore.</p>
+    <form className="mt-7 space-y-4" onSubmit={handleSubmit}>
+     <div><label htmlFor="signup-name" className="text-xs font-bold text-[#455349]">Full name</label><div className="relative"><FiUser className="absolute left-4 top-[26px] text-[#8b998e]"/><input id="signup-name" autoComplete="name" required value={name} onChange={e=>setName(e.target.value)} placeholder="Your name" className={field+" pl-11"}/></div></div>
+     <div><label htmlFor="signup-email" className="text-xs font-bold text-[#455349]">Email address</label><div className="relative"><FiMail className="absolute left-4 top-[26px] text-[#8b998e]"/><input id="signup-email" type="email" autoComplete="email" required value={email} onChange={e=>setEmail(e.target.value)} placeholder="you@example.com" className={field+" pl-11"}/></div></div>
+     <div><label htmlFor="signup-password" className="text-xs font-bold text-[#455349]">Password</label><div className="relative"><FiLock className="absolute left-4 top-[26px] text-[#8b998e]"/><input id="signup-password" type={visible?"text":"password"} autoComplete="new-password" minLength={6} required value={password} onChange={e=>setPassword(e.target.value)} placeholder="Create a password" className={field+" pl-11 pr-12"}/><button type="button" aria-label={visible?"Hide password":"Show password"} onClick={()=>setVisible(!visible)} className="absolute right-4 top-[25px] text-[#819087]">{visible?<AiOutlineEye size={19}/>:<AiOutlineEyeInvisible size={19}/>}</button></div></div>
+     <div><label className="text-xs font-bold text-[#455349]">Profile photo <span className="font-normal text-[#9aa49c]">(optional)</span></label><label htmlFor="buyer-avatar" className="mt-2 flex cursor-pointer items-center gap-4 rounded-2xl border border-dashed border-[#d6e0d5] bg-[#f8faf7] p-3 transition hover:border-[#315c46] hover:bg-[#f1f5ef]"><span className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#eaf0e8] text-[#66806e]">{avatar?<img src={avatar} alt="Profile preview" className="h-full w-full object-cover"/>:<RxAvatar size={28}/>}</span><span className="min-w-0 flex-1"><span className="block text-sm font-bold text-[#344338]">{avatar?"Photo selected":"Upload a profile photo"}</span><span className="mt-1 block text-xs text-[#89948c]">JPG, PNG or WebP</span></span><FiUploadCloud className="text-[#315c46]"/><input id="buyer-avatar" type="file" accept="image/*" onChange={handleFileInputChange} className="sr-only"/></label></div>
+     <button disabled={loading} className="inline-flex h-[52px] w-full items-center justify-center gap-2 rounded-full bg-[#315c46] px-6 text-sm font-bold text-white shadow-[0_10px_24px_rgba(49,92,70,.18)] transition hover:-translate-y-0.5 hover:bg-[#244735] disabled:opacity-60">{loading?"Creating account…":"Create account"}<FiArrowRight/></button>
+    </form><p className="mt-6 text-center text-sm text-[#7b867e]">Already have an account? <Link to="/login" className="font-bold text-[#315c46] hover:text-[#244735]">Sign in</Link></p>
+   </div></section>
+  </div>
+ </div></main>;
 };
-
 export default SignUp;
