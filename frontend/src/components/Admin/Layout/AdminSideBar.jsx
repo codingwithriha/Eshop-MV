@@ -21,7 +21,7 @@ const AdminSidebar = ({ active }) => {
   ];
 
   return (
-    <aside className="sticky top-[76px] z-20 h-[calc(100dvh-76px)] self-start w-full overflow-y-auto overscroll-contain border-r border-[#e5ebe3] bg-[#fbfcfa] px-3 py-6">
+    <aside className="fixed left-0 top-[76px] z-20 h-[calc(100dvh-76px)] w-[80px] overflow-x-hidden overflow-y-auto overscroll-contain 800px:w-[330px]" border-r border-[#e5ebe3] bg-[#fbfcfa] px-3 py-6">
       <div className="mb-7 px-3">
         <p className="text-[10px] font-extrabold uppercase tracking-[.18em] text-[#87958a]">Control centre</p>
         <h2 className="mt-2 font-display text-lg font-extrabold tracking-tight text-[#26372d]">Manage your platform</h2>
