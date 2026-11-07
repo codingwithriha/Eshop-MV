@@ -2,7 +2,7 @@ const path = require("path");
 
 // Load env before any module reads process.env
 require("dotenv").config({
-  path: path.join(__dirname, "config/.env"),
+  path: path.join(__dirname, ".env"),
 });
 
 const app = require("./app");
