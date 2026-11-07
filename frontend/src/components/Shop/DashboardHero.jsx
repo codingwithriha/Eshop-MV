@@ -80,11 +80,11 @@ const DashBoardHero = () => {
     });
 
   return (
-    <div className="w-full bg-[#f6f8f5] p-6">
-      <h3 className="text-[28px] font-bold font-Poppins pb-6 text-[#26372d]">Seller Dashboard</h3>
+    <main className="min-w-0 flex-1 bg-[#f6f8f5] p-5 sm:p-7">
+      <div className="mb-7 flex flex-wrap items-end justify-between gap-3"><div><p className="text-[10px] font-extrabold uppercase tracking-[.18em] text-[#66806e]">Seller workspace</p><h1 className="mt-2 font-display text-3xl font-extrabold tracking-[-.04em] text-[#202923]">Your shop at a glance.</h1><p className="mt-2 text-sm text-[#7b867e]">Track sales, manage your catalogue and stay on top of orders.</p></div><Link to="/dashboard-create-product" className="inline-flex h-11 items-center justify-center rounded-full bg-[#315c46] px-5 text-xs font-bold text-white transition hover:bg-[#244735]">+ Add a product</Link></div>
       
       {/* Stats Cards */}
-      <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-3 mb-8">
         {/* Account Balance Card */}
         <div className="bg-[#315c46] rounded-2xl border border-white/15 p-6 text-white shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5">
           <div className="flex items-center justify-between">
@@ -103,7 +103,7 @@ const DashBoardHero = () => {
         </div>
 
         {/* All Orders Card */}
-        <div className="bg-[#496c58] rounded-2xl p-6 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+        <div className="bg-[#496c58] rounded-2xl border border-white/15 p-6 text-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-blue-100 text-sm font-medium mb-1">Total Orders</p>
@@ -119,7 +119,7 @@ const DashBoardHero = () => {
         </div>
 
         {/* All Products Card */}
-        <div className="bg-[#a47c50] rounded-2xl p-6 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+        <div className="bg-[#a47c50] rounded-2xl border border-white/15 p-6 text-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-orange-100 text-sm font-medium mb-1">Total Products</p>
@@ -136,9 +136,9 @@ const DashBoardHero = () => {
       </div>
 
       {/* Latest Orders Table */}
-      <div className="bg-white rounded-2xl shadow-lg p-6">
-        <h3 className="text-[22px] font-bold font-Poppins pb-4 text-gray-800">Latest Orders</h3>
-        <div className="w-full min-h-[45vh]">
+      <div className="bg-white rounded-2xl border border-[#e7ebe5] shadow-sm p-5 sm:p-6">
+        <h3 className="font-display text-xl font-extrabold pb-1 text-[#26372d]">Latest Orders</h3>
+        <p className="mb-4 text-xs text-[#879188]">Your latest customer purchases and order status.</p><div className="w-full min-h-[45vh]">
           <DataGrid
             rows={row}
             columns={columns}
@@ -153,7 +153,7 @@ const DashBoardHero = () => {
                 borderBottom: '1px solid #f3f4f6',
               },
               '& .MuiDataGrid-columnHeaders': {
-                backgroundColor: '#f9fafb',
+                backgroundColor: '#f5f7f3',
                 borderBottom: '2px solid #e5e7eb',
               },
               '& .MuiDataGrid-columnHeaderTitle': {
@@ -163,7 +163,7 @@ const DashBoardHero = () => {
           />
         </div>
       </div>
-    </div>
+    </main>
   );
 };
 
