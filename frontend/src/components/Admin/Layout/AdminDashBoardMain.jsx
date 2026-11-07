@@ -71,7 +71,7 @@ const AdminDashBoardMain = () => {
       {isLoading ? (
         <Loader />
       ) : (
-        <div className="w-full p-4 bg-[#f5f5f5]">
+        <div className="w-full p-6 bg-[#f6f8f5]">
           <h3 className="text-[22px] font-Poppins pb-2">Overview</h3>
           <div className="w-full block 800px:flex items-center justify-between">
             <div className="w-full mb-4 800px:w-[30%] min-h-[20vh] bg-white shadow rounded px-2 py-5">
@@ -104,7 +104,7 @@ const AdminDashBoardMain = () => {
                 {sellers && sellers?.length}
               </h5>
               <Link to="/admin-sellers">
-                <h5 className="pt-4 pl-[2] text-[#077f9c]">View Sellers</h5>
+                <h5 className="pt-4 pl-[2] text-[#315c46]">View Sellers</h5>
               </Link>
             </div>
             <div className="w-full mb-4 800px:w-[30%] min-h-[20vh] bg-white shadow rounded px-2 py-5">
@@ -130,7 +130,7 @@ const AdminDashBoardMain = () => {
           </div>
           <br />
 
-          <div className="w-full min-h-[45vh] bg-white rounded">
+          <div className="w-full min-h-[45vh] bg-white border border-[#e7ebe5] shadow-sm rounded-2xl p-3">
             <DataGrid
               rows={row}
               columns={columns}
