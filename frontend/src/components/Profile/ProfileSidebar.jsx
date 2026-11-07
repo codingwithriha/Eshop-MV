@@ -32,17 +32,17 @@ const ProfileSideBar = ({ active, setActive }) => {
     }
   };
   return (
-    <div className="w-ful bg-[#fff] shadow-sm rounded-[4px] p-4 pt-8">
+    <div className="w-ful bg-white border border-[#e7ebe5] shadow-sm rounded-2xl p-4 pt-8">
       <div
         className="w-full flex cursor-pointer items-center mb-8 "
         onClick={() => {
           setActive(1);
         }}
       >
-        <RxPerson size={20} color={active === 1 ? "red" : ""} />
+        <RxPerson size={20} color={active === 1 ? "#315c46" : ""} />
         <span
           className={`pl-3 ${
-            active == 1 ? "text-[red]" : ""
+            active == 1 ? "text-[#315c46]" : ""
           } 800px:block  hidden`}
         >
           Profile
