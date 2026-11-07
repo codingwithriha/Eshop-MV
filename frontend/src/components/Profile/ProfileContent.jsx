@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { RiLockPasswordLine } from "react-icons/ri";
+import { TbAddressBook } from "react-icons/tb";
 import {
   AiOutlineArrowRight,
   AiOutlineCamera,
@@ -393,3 +394,5 @@ const Address = () => {
  <div className="flex justify-end gap-3 border-t border-[#edf0eb] pt-4 sm:col-span-2"><button type="button" onClick={()=>{setOpen(false);reset();}} className="rounded-xl border border-[#e3e9e1] px-5 py-3 text-sm font-bold text-[#657369]">Cancel</button><button type="submit" className="rounded-xl bg-[#315c46] px-6 py-3 text-sm font-extrabold text-white">Save address</button></div></form></div></div>}
  </div>;
 };
+
+export default ProfileContent;
