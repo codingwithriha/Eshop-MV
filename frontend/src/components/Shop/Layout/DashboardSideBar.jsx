@@ -19,7 +19,7 @@ const DashboardSideBar = ({ active }) => {
   ];
 
   return (
-    <aside className="sticky top-0 z-10 h-[calc(100vh-76px)] w-full overflow-y-auto border-r border-[#e5ebe3] bg-[#fbfcfa] px-3 py-6">
+    <aside className="sticky top-[76px] z-20 h-[calc(100dvh-76px)] self-start w-full overflow-y-auto overscroll-contain border-r border-[#e5ebe3] bg-[#fbfcfa] px-3 py-6">
       <div className="mb-7 flex items-center gap-3 px-3">
         <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#315c46] text-white"><FiShoppingBag size={20}/></span>
         <div><p className="font-display text-base font-extrabold tracking-tight text-[#26372d]">Seller studio</p><p className="text-[10px] font-medium text-[#879188]">Your business workspace</p></div>
