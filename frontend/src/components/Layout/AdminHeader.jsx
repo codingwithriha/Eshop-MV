@@ -1,11 +1,29 @@
 import React from "react";
-import { FiBell, FiHome, FiPackage, FiShoppingBag, FiUsers } from "react-icons/fi";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { server } from "../../server";
+import { FiHome, FiLogOut, FiPackage, FiShoppingBag, FiUsers } from "react-icons/fi";
 import { MdEmojiEvents } from "react-icons/md";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 const AdminHeader = () => {
   const { user } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      const { data } = await axios.get(server + "/user/logout", { withCredentials: true });
+      dispatch({ type: "LogoutSuccess" });
+      toast.success(data?.message || "Logged out successfully.");
+      navigate("/admin-login", { replace: true });
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Unable to log out. Please try again.");
+    }
+  };
   return (
     <header className="sticky top-0 z-30 flex h-[76px] w-full items-center justify-between border-b border-[#e7ebe5] bg-white/95 px-4 shadow-[0_4px_20px_rgba(32,41,35,.04)] backdrop-blur-xl sm:px-7">
       <Link to="/admin/dashboard" className="flex items-center gap-3">
@@ -19,9 +37,12 @@ const AdminHeader = () => {
         ))}
       </nav>
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2 sm:gap-3">
         <span className="hidden text-right sm:block"><span className="block text-xs font-bold text-[#29372e]">{user?.name || "Administrator"}</span><span className="block text-[10px] text-[#879188]">Platform administrator</span></span>
-        {user?.avatar?.url ? <img src={user.avatar.url} alt="Administrator profile" className="h-10 w-10 rounded-full border-2 border-[#dce7dc] object-cover"/> : <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#edf2ec] font-bold text-[#315c46]">{(user?.name || "A").charAt(0).toUpperCase()}</span>}
+        {user?.avatar?.url ? <img src={user.avatar.url} alt="Administrator profile" className="hidden h-10 w-10 rounded-full border-2 border-[#dce7dc] object-cover sm:block"/> : <span className="hidden h-10 w-10 items-center justify-center rounded-full bg-[#edf2ec] font-bold text-[#315c46] sm:flex">{(user?.name || "A").charAt(0).toUpperCase()}</span>}
+        <button type="button" onClick={handleLogout} className="inline-flex items-center gap-2 rounded-xl border border-[#eaded8] bg-white px-3 py-2.5 text-xs font-bold text-[#9a5145] transition hover:border-[#d8b8ae] hover:bg-[#fff7f5] focus:outline-none focus:ring-2 focus:ring-[#d8b8ae] focus:ring-offset-2" aria-label="Log out of admin account">
+          <FiLogOut size={16} /><span>Log out</span>
+        </button>
       </div>
     </header>
   );
