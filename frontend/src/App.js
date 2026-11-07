@@ -66,6 +66,7 @@ import axios from "axios";
 import { server } from "./server.js";
 import ProtectedAdminRoute from "./routes/ProtectedAdminRoute.js";
 import AdminLogin from "./components/Admin/AdminLogin.jsx";
+import AdminSettingsPage from "./pages/AdminSettingsPage";
 import { useDispatch } from "react-redux";
 const App = () => {
   const [stripeApiKey, setStripeApiKey] = useState("");
@@ -335,6 +336,14 @@ const App = () => {
             element={
               <ProtectedAdminRoute>
                 <AdminDashboardWithdraw />
+              </ProtectedAdminRoute>
+            }
+          />
+          <Route
+            path="/admin-settings"
+            element={
+              <ProtectedAdminRoute>
+                <AdminSettingsPage />
               </ProtectedAdminRoute>
             }
           />
