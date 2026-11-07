@@ -80,13 +80,13 @@ const DashBoardHero = () => {
     });
 
   return (
-    <div className="w-full p-6">
-      <h3 className="text-[28px] font-bold font-Poppins pb-6 text-gray-800">Seller Dashboard</h3>
+    <div className="w-full bg-[#f6f8f5] p-6">
+      <h3 className="text-[28px] font-bold font-Poppins pb-6 text-[#26372d]">Seller Dashboard</h3>
       
       {/* Stats Cards */}
       <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         {/* Account Balance Card */}
-        <div className="bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-2xl p-6 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+        <div className="bg-[#315c46] rounded-2xl border border-white/15 p-6 text-white shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-emerald-100 text-sm font-medium mb-1">Available Balance</p>
@@ -103,7 +103,7 @@ const DashBoardHero = () => {
         </div>
 
         {/* All Orders Card */}
-        <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-6 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+        <div className="bg-[#496c58] rounded-2xl p-6 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-blue-100 text-sm font-medium mb-1">Total Orders</p>
@@ -119,7 +119,7 @@ const DashBoardHero = () => {
         </div>
 
         {/* All Products Card */}
-        <div className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl p-6 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+        <div className="bg-[#a47c50] rounded-2xl p-6 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-orange-100 text-sm font-medium mb-1">Total Products</p>
