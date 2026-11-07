@@ -10,7 +10,7 @@ const DashboardHeader = () => {
   const { seller } = useSelector((state) => state.seller);
   return (
     <>
-      <div className="w-full h-[80px] bg-white shadow sticky top-0 left-0  z-30 flex items-center justify-between px-4">
+      <div className="w-full h-[76px] bg-white/95 backdrop-blur-xl border-b border-[#e7ebe5] sticky top-0 left-0  z-30 flex items-center justify-between px-4">
         <div>
           <Link to="/">
             <img src="https://shopo.quomodothemes.website/assets/images/logo.svg" />
@@ -20,7 +20,7 @@ const DashboardHeader = () => {
           <div className="flex items-center mr-4">
             <Link to={`/dashboard-coupons`} className="800px:block hidden">
               <AiOutlineGift
-                color="#555"
+                color="#315c46"
                 size={30}
                 className="mx-5 cursor-pointer"
               />
@@ -58,7 +58,7 @@ const DashboardHeader = () => {
               <Link to={`/shop/${seller?._id}`} className="800px:block hidden">
                 <img
                   src={`${seller.avatar?.url}`}
-                  className="w-[50px] h-[50px] rounded-full object-cover"
+                  className="w-[42px] h-[42px] rounded-full border-2 border-[#dce7dc] object-cover"
                   alt="Seller Avatar"
                 />
               </Link>
