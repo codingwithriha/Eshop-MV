@@ -80,7 +80,7 @@ const Header = ({ activeHeading }) => {
                 placeholder="Search products..."
                 value={searchTerm}
                 onChange={handleSearchChange}
-                className="h-[45px] w-full px-4 pl-12 border-2 border-gray-200 rounded-full focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
+                className="h-[45px] w-full px-4 pl-12 border border-[#e1e8df] rounded-full focus:outline-none focus:border-[#315c46] focus:ring-2 focus:ring-[#315c46]/10 transition-all"
               />
               <AiOutlineSearch
                 size={20}
@@ -113,7 +113,7 @@ const Header = ({ activeHeading }) => {
             {/* ending searchBox styling */}
           </div>
           {/* Styling for seller button */}
-          <div className={`${styles.button} !bg-gradient-to-r !from-blue-600 !to-purple-600 !rounded-full !h-[45px] !px-6 hover:shadow-lg hover:shadow-blue-500/30 transition-all`}>
+          <div className={`${styles.button} !bg-[#315c46] !rounded-full !h-[45px] !px-6 hover:shadow-lg hover:shadow-[#315c46]/20 transition-all`}>
             <Link to={`${isSeller ? "/dashboard" : "/shop-create"}`}>
               <h1 className="text-white flex items-center font-semibold">
                 {isSeller ? "DASHBOARD" : "CREATE SHOP"}
@@ -127,8 +127,8 @@ const Header = ({ activeHeading }) => {
       {/* styling for fixed navbar  only for big screen*/}
       <div
         className={`${
-          active === true ? "shadow-xl fixed top-0 left-0 z-50 bg-white/95 backdrop-blur-md" : null
-        } transition-all duration-300 hidden 800px:flex items-center justify-between w-full bg-gradient-to-r from-blue-700 to-purple-700 h-[70px]`}
+          active === true ? "shadow-lg fixed top-0 left-0 z-50 bg-[#315c46]/95 backdrop-blur-md" : null
+        } transition-all duration-300 hidden 800px:flex items-center justify-between w-full bg-[#315c46] h-[70px]`}
       >
         <div
           className={`${styles.section} ${styles.normalFlex} relative justify-between`}
