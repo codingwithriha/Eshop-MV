@@ -1,61 +1,35 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { server } from "../../server";
+
+const getTimeLeft = (finishDate) => {
+  const difference = new Date(finishDate).getTime() - Date.now();
+  if (!finishDate || Number.isNaN(difference) || difference <= 0) return null;
+  return {
+    days: Math.floor(difference / 86400000),
+    hours: Math.floor((difference / 3600000) % 24),
+    minutes: Math.floor((difference / 60000) % 60),
+    seconds: Math.floor((difference / 1000) % 60),
+  };
+};
+
 const CountDown = ({ data }) => {
-  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
+  const [timeLeft, setTimeLeft] = useState(() => getTimeLeft(data?.Finish_Date));
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setTimeLeft(calculateTimeLeft());
-    }, 1000);
-    if (
-      typeof timeLeft.days === "undefined" &&
-      typeof timeLeft.hours === "undefined" &&
-      typeof timeLeft.minutes === "undefined" &&
-      typeof timeLeft.seconds === "undefined"
-    ) {
-      axios.delete(`${server}/event/delete-shop-event/${data._id}`, {
-        withCredentials: true,
-      });
-    }
-    return () => clearTimeout(timer);
-  });
+    setTimeLeft(getTimeLeft(data?.Finish_Date));
+    const timer = setInterval(() => setTimeLeft(getTimeLeft(data?.Finish_Date)), 1000);
+    return () => clearInterval(timer);
+  }, [data?.Finish_Date]);
 
-  function calculateTimeLeft() {
-    const difference = +new Date(`${data.Finish_Date}`) - +new Date();
-    let timeLeft = {};
-
-    if (difference > 0) {
-      timeLeft = {
-        days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-        hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-        minutes: Math.floor((difference / 1000 / 60) % 60),
-        seconds: Math.floor((difference / 1000) % 60),
-      };
-    }
-
-    return timeLeft;
-  }
-
-  const timerComponents = Object.keys(timeLeft).map((interval) => {
-    if (!timeLeft[interval]) {
-      return null;
-    }
-
-    return (
-      <span key={interval} className="text-[25px] text-[#475ad2]">
-        {timeLeft[interval]} {interval}{" "}
-      </span>
-    );
-  });
+  if (!timeLeft) return <span className="text-sm font-semibold text-[#a47c50]">Offer ended</span>;
 
   return (
-    <div>
-      {timerComponents.length ? (
-        timerComponents
-      ) : (
-        <span className="text-[red] text-[25px]">Time's Up</span>
-      )}
+    <div className="flex flex-wrap items-center gap-2">
+      {Object.entries(timeLeft).map(([unit,value]) => (
+        <span key={unit} className="rounded-lg bg-white px-3 py-2 text-center shadow-sm">
+          <strong className="block font-display text-lg leading-none text-[#315c46]">{String(value).padStart(2,"0")}</strong>
+          <small className="mt-1 block text-[9px] font-bold uppercase tracking-wider text-[#879188]">{unit}</small>
+        </span>
+      ))}
     </div>
   );
 };
