@@ -51,7 +51,7 @@ const Cart = ({ setOpenCart }) => {
               {/* Items Length */}
               <div className={`${styles.normalFlex} p-4`}>
                 <IoBagHandleOutline size={25} />
-                <h5 className="pl-2 text-[20px] font-[500]">
+                <h5 className="pl-2 text-[14px] font-bold">
                   {cart && cart.length} items
                 </h5>
               </div>
@@ -73,7 +73,7 @@ const Cart = ({ setOpenCart }) => {
               {/* Checkout buttons */}
               <Link
                 to="/checkout"
-                className={`h-[45px] flex items-center justify-center w-[100%] bg-[#e44343] rounded-[5px]`}
+                className={`h-[45px] flex items-center justify-center w-[100%] bg-[#315c46] rounded-xl`}
               >
                 <h1 className="text-[#fff] text-[20px] font-[500] flex items-center justify-center w-[100%] bg-[#e44343] rounded-[5px]">
                   CheckOut Now USD$ ({totalPrice})
