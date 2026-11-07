@@ -7,9 +7,7 @@ import { TfiGallery } from "react-icons/tfi";
 import { format } from "timeago.js";
 import { AiOutlineArrowRight, AiOutlineSend } from "react-icons/ai";
 import styles from "../../styles/styles";
-import SocketIO from "socket.io-client";
-const ENDPOINTS = "https://eshop-mv-socket.up.railway.app";
-const socketId = SocketIO(ENDPOINTS, { transports: ["websocket"] });
+import socketId from "../../socket";
 const DashBoardMessages = () => {
   const [open, setOpen] = useState(false);
   const [images, setImages] = useState({});

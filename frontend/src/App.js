@@ -65,6 +65,7 @@ import { getAllEvents } from "./redux/actions/event.js";
 import axios from "axios";
 import { server } from "./server.js";
 import ProtectedAdminRoute from "./routes/ProtectedAdminRoute.js";
+import AdminLogin from "./components/Admin/AdminLogin.jsx";
 import { useDispatch } from "react-redux";
 const App = () => {
   const [stripeApiKey, setStripeApiKey] = useState("");
@@ -165,6 +166,7 @@ const App = () => {
           {/* Mounting Shop Routes */}
           <Route path="/shop-create" element={<ShopCreatePage />} />
           <Route path="/shop-login" element={<ShopLoginPage />} />
+          <Route path="/admin-login" element={<AdminLogin />} />
           <Route
             path="seller/activation/:activation_token"
             element={<SellerActivationPage />}
