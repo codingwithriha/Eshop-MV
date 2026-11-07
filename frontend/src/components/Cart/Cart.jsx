@@ -1,156 +1,26 @@
 import React from "react";
-import { RxCross1 } from "react-icons/rx";
-import { HiOutlineMinus, HiPlus } from "react-icons/hi";
-import { IoBagHandleOutline } from "react-icons/io5";
-import styles from "../../styles/styles";
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { addTocart, removeFromCart } from "../../redux/actions/cart";
-import { toast } from "react-toastify";
-const Cart = ({ setOpenCart }) => {
-  const { cart } = useSelector((state) => state.cart);
-  const dispatch = useDispatch();
-
-  const removeFromCartHandler = (data) => {
-    dispatch(removeFromCart(data));
-  };
-
-  const qtyChangeHandler = (data) => {
-    dispatch(addTocart(data));
-  };
-
-  const totalPrice = cart.reduce(
-    (acc, item) => acc + item.qty * item.discountPrice,
-    0
-  );
-  return (
-    <div className="fixed top-0 left-0 w-full bg-[#0000004b] h-screen z-10">
-      <div className="fixed top-0 right-0 h-full w-[80%] 800px:w-[25%] bg-white flex flex-col overflow-y-scroll justify-between shadow-sm">
-        {cart && cart.length == 0 ? (
-          <div className="w-full h-full flex items-center justify-center">
-            <div className="w-full flex justify-end pt-5 pr-5 fixed top-3 right-3">
-              <RxCross1
-                size={25}
-                className="cursor-pointer"
-                onClick={() => setOpenCart(false)}
-              />
-            </div>
-            <h5>Cart items is empty!</h5>
-          </div>
-        ) : (
-          <>
-            <div>
-              <div className="flex w-full justify-end pt-5 pr-5 ">
-                <RxCross1
-                  size={25}
-                  className="cursor-pointer"
-                  onClick={() => setOpenCart(false)}
-                />
-              </div>
-              {/* Items Length */}
-              <div className={`${styles.normalFlex} p-4`}>
-                <IoBagHandleOutline size={25} />
-                <h5 className="pl-2 text-[14px] font-bold">
-                  {cart && cart.length} items
-                </h5>
-              </div>
-              {/* Card Single Items */}
-              <br />
-              <div className="w-full border-t ">
-                {cart &&
-                  cart.map((item, index) => (
-                    <CartSingle
-                      key={index}
-                      item={item}
-                      qtyChangeHandler={qtyChangeHandler}
-                      removeFromCartHandler={removeFromCartHandler}
-                    />
-                  ))}
-              </div>
-            </div>
-            <div className="px-5 mb-3 ">
-              {/* Checkout buttons */}
-              <Link
-                to="/checkout"
-                className={`h-[45px] flex items-center justify-center w-[100%] bg-[#315c46] rounded-xl`}
-              >
-                <h1 className="text-[#fff] text-[20px] font-[500] flex items-center justify-center w-[100%] bg-[#e44343] rounded-[5px]">
-                  CheckOut Now USD$ ({totalPrice})
-                </h1>
-              </Link>
-            </div>
-          </>
-        )}
-      </div>
-    </div>
-  );
+import {RxCross1} from "react-icons/rx";
+import {HiOutlineMinus,HiPlus} from "react-icons/hi";
+import {IoBagHandleOutline} from "react-icons/io5";
+import {FiShoppingBag,FiArrowRight,FiTrash2} from "react-icons/fi";
+import {Link} from "react-router-dom";
+import {useDispatch,useSelector} from "react-redux";
+import {addTocart,removeFromCart} from "../../redux/actions/cart";
+import {toast} from "react-toastify";
+const Cart=({setOpenCart})=>{
+ const cart=useSelector(s=>s.cart.cart||[]),dispatch=useDispatch();
+ const total=cart.reduce((sum,item)=>sum+Number(item.qty||0)*Number(item.discountPrice||0),0);
+ const close=()=>setOpenCart(false);
+ return <div className="fixed inset-0 z-[100] bg-[#17231b]/45 backdrop-blur-[2px]" onClick={close}>
+  <aside onClick={e=>e.stopPropagation()} className="fixed right-0 top-0 flex h-full w-full max-w-[470px] flex-col bg-[#fbfcfa] shadow-2xl">
+   <header className="flex items-center justify-between border-b border-[#e7ece5] bg-white px-6 py-5"><div className="flex items-center gap-3"><span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#edf3ed] text-[#315c46]"><IoBagHandleOutline size={21}/></span><div><h2 className="font-display text-lg font-extrabold text-[#26372d]">Your bag</h2><p className="text-xs text-[#87938a]">{cart.length} {cart.length===1?"item":"items"} in your cart</p></div></div><button onClick={close} aria-label="Close cart" className="rounded-full border border-[#e7ece5] p-2.5 text-[#627066] transition hover:bg-[#edf3ed]"><RxCross1/></button></header>
+   {cart.length===0?<div className="flex flex-1 flex-col items-center justify-center px-8 text-center"><span className="flex h-20 w-20 items-center justify-center rounded-full bg-[#edf3ed] text-[#315c46]"><FiShoppingBag size={32}/></span><h3 className="mt-5 font-display text-xl font-extrabold text-[#26372d]">Your bag is waiting</h3><p className="mt-2 max-w-[260px] text-sm leading-6 text-[#849087]">You haven't added anything yet. Explore the store and find something you'll love.</p><Link to="/products" onClick={close} className="mt-6 inline-flex items-center gap-2 rounded-full bg-[#315c46] px-6 py-3 text-sm font-bold text-white hover:bg-[#244735]">Explore products <FiArrowRight/></Link></div>:
+   <><div className="flex-1 space-y-3 overflow-y-auto p-4 sm:p-5">{cart.map((item,index)=><CartItem key={item._id||index} item={item} onRemove={()=>dispatch(removeFromCart(item))} onQty={qty=>dispatch(addTocart({...item,qty}))}/>)}</div><footer className="border-t border-[#e7ece5] bg-white p-5 sm:p-6"><div className="mb-4 flex items-center justify-between"><span className="text-sm text-[#78857b]">Subtotal</span><strong className="font-display text-2xl text-[#26372d]">US$ {total.toFixed(2)}</strong></div><p className="mb-4 text-[11px] leading-5 text-[#9aa49c]">Shipping and taxes are calculated at checkout.</p><Link to="/checkout" onClick={close} className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#315c46] text-sm font-extrabold text-white shadow-[0_8px_18px_rgba(49,92,70,.16)] transition hover:bg-[#244735]">Continue to checkout <FiArrowRight/></Link><button onClick={close} className="mt-3 w-full py-2 text-xs font-bold text-[#718076] hover:text-[#315c46]">Continue shopping</button></footer></>}
+  </aside>
+ </div>;
 };
-
-const CartSingle = ({ item, qtyChangeHandler, removeFromCartHandler }) => {
-  const [value, setValue] = useState(item.qty);
-  const totalPrice = item.discountPrice * value;
-  const increment = (item) => {
-    if (item.stock < value) {
-      toast.error("Not enough stock available");
-    } else {
-      setValue(value + 1);
-      const newData = {
-        ...item,
-        qty: value + 1,
-      };
-      qtyChangeHandler(newData);
-    }
-  };
-  const decrement = (item) => {
-    setValue(value == 1 ? 1 : value - 1);
-    const newData = {
-      ...item,
-      qty: value == 1 ? 1 : value - 1,
-    };
-    qtyChangeHandler(newData);
-  };
-  return (
-    <div className="border-b p-4 ">
-      <div className="w-full flex  items-center">
-        {/* Quantity Controls */}
-        <div>
-          <div
-            className={`bg-[#e44343] border border-[#e4434373] rounded-full w-[25px] h-[25px]  ${styles.normalFlex}  justify-center cursor-pointer`}
-            onClick={() => increment(item)}
-          >
-            <HiPlus size={20} className="text-[#fff]" />
-          </div>
-          <span className="pl-[10px]">{item.qty}</span>
-          <div
-            className="bg-[#a7abb14f] rounded-full w-[25px] h-[25px] flex items-center justify-center cursor-pointer"
-            onClick={() => decrement(item)}
-          >
-            <HiOutlineMinus size={16} className="text-[#7d879d]" />
-          </div>
-        </div>
-        {/* Product Image */}
-        <img
-          className="w-[130px] h-min ml-2 mr-2 rounded-[5px] "
-          src={`${item.images[0]?.url}`}
-          alt="Static Product"
-        />
-        <div className="pl-[5px]">
-          <h1>{item.name}</h1>
-          <h4 className="font-[400] text-[15px] text-[#000]">
-            {item.discountPrice}*{value}
-          </h4>
-          <h4 className="font-[600] text-[17px] pt-[13px] text-[red] font-Roboto">
-            US$ {totalPrice}
-          </h4>
-        </div>
-        <RxCross1
-          onClick={() => removeFromCartHandler(item)}
-          className="cursor-pointer"
-        />
-      </div>
-    </div>
-  );
+const CartItem=({item,onRemove,onQty})=>{
+ const qty=Number(item.qty||1),price=Number(item.discountPrice||0),stock=Number(item.stock??Infinity),image=item.images?.[0]?.url;
+ return <article className="flex gap-3 rounded-2xl border border-[#e7ece5] bg-white p-3 shadow-[0_3px_12px_rgba(35,52,40,.025)]"><img src={image||"https://placehold.co/120x120/f0f3ee/718176?text=Product"} onError={e=>{e.currentTarget.onerror=null;e.currentTarget.src="https://placehold.co/120x120/f0f3ee/718176?text=Product"}} alt={item.name||"Product"} className="h-24 w-24 shrink-0 rounded-xl bg-[#f5f7f3] object-contain"/><div className="flex min-w-0 flex-1 flex-col"><div className="flex items-start justify-between gap-2"><h3 className="line-clamp-2 text-sm font-bold leading-5 text-[#344238]">{item.name}</h3><button onClick={onRemove} aria-label="Remove item" className="rounded-lg p-1.5 text-[#a0aaa2] hover:bg-[#fff1ee] hover:text-[#b5685a]"><FiTrash2 size={15}/></button></div><p className="mt-1 text-xs text-[#8a968d]">US$ {price.toFixed(2)} each</p><div className="mt-auto flex items-center justify-between pt-3"><div className="flex items-center gap-3 rounded-full border border-[#e7ece5] px-2 py-1"><button disabled={qty<=1} onClick={()=>onQty(Math.max(1,qty-1))} className="p-1 text-[#647369] disabled:opacity-30"><HiOutlineMinus/></button><span className="min-w-4 text-center text-xs font-bold text-[#344238]">{qty}</span><button disabled={qty>=stock} onClick={()=>{if(qty>=stock){toast.error("Not enough stock available");return;}onQty(qty+1)}} className="p-1 text-[#315c46] disabled:opacity-30"><HiPlus/></button></div><strong className="text-sm font-extrabold text-[#315c46]">US$ {(price*qty).toFixed(2)}</strong></div></div></article>;
 };
-
 export default Cart;
