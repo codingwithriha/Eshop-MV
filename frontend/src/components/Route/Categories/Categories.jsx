@@ -11,7 +11,7 @@ const Categories = () => {
         {brandingData?.map((item,index)=>(
           <div className="flex items-center gap-4 px-2 py-2" key={item.id||index}>
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#edf2ec] text-[#315c46]">{item.icon}</div>
-            <div><h3 className="font-display text-sm font-bold text-[#26352b]">{item.title}</h3><p className="mt-1 text-xs leading-5 text-[#78837b]">{item.description}</p></div>
+            <div><h3 className="font-display text-sm font-bold text-[#26352b]">{item.title}</h3><p className="mt-1 text-xs leading-5 text-[#78837b]">{item.description || item.Description}</p></div>
           </div>
         ))}
       </div>
