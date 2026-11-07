@@ -370,82 +370,10 @@ const TrackOrder = () => {
   );
 };
 const ChangePassword = () => {
-  const [oldPassword, setOldPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const handleChangePassword = async (e) => {
-    e.preventDefault();
-    await axios
-      .put(
-        `${server}/user/update-user-password`,
-        {
-          oldPassword,
-          newPassword,
-          confirmPassword,
-        },
-        { withCredentials: true }
-      )
-      .then((res) => {
-        toast.success(res.data.success);
-        setOldPassword("");
-        setNewPassword("");
-        setConfirmPassword("");
-      })
-      .catch((error) => {
-        toast.error(error.response.data.message);
-      });
-  };
-  return (
-    <div className="w-full px-5">
-      <h1 className="text-[25px]  text-center font-[600] text-[#000000] pb-2 ">
-        Change Password
-      </h1>
-      <div className="w-full">
-        <form
-          aria-required
-          onSubmit={handleChangePassword}
-          className="flex flex-col items-center"
-        >
-          <div className=" w-[100%] 800px:w-[50%] mt-5">
-            <label className="block pb-2">Enter Your Old Password</label>
-            <input
-              type="password"
-              className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
-              required
-              value={oldPassword}
-              onChange={(e) => setOldPassword(e.target.value)}
-            />
-          </div>
-          <div className=" w-[100%] 800px:w-[50%] mt-5">
-            <label className="block pb-2">Enter New Password</label>
-            <input
-              type="password"
-              className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
-              required
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-            />
-          </div>
-          <div className=" w-[100%] 800px:w-[50%] mt-5">
-            <label className="block pb-2">Enter Confirm Password</label>
-            <input
-              type="password"
-              className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
-              required
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-            />
-            <input
-              className={`w-[95%] h-[40px] border border-[#3a24db] text-center text-[#3a24db] rounded-[3px] mt-8 cursor-pointer`}
-              required
-              value="Update"
-              type="submit"
-            />
-          </div>
-        </form>
-      </div>
-    </div>
-  );
+ const [oldPassword,setOldPassword]=useState("");const [newPassword,setNewPassword]=useState("");const [confirmPassword,setConfirmPassword]=useState("");
+ const handleChangePassword=async(e)=>{e.preventDefault();try{const res=await axios.put(`${server}/user/update-user-password`,{oldPassword,newPassword,confirmPassword},{withCredentials:true});toast.success(res.data.success||"Password updated successfully");setOldPassword("");setNewPassword("");setConfirmPassword("");}catch(error){toast.error(error.response?.data?.message||"Unable to update password");}};
+ const fields=[["Current password",oldPassword,setOldPassword],["New password",newPassword,setNewPassword],["Confirm new password",confirmPassword,setConfirmPassword]];
+ return <div className="mx-auto max-w-2xl"><div className="mb-6 rounded-2xl border border-[#e5ebe3] bg-[#f7f9f6] p-5"><div className="mb-2 flex h-11 w-11 items-center justify-center rounded-xl bg-[#e8f0e8] text-[#315c46]"><RiLockPasswordLine size={21}/></div><h3 className="font-display text-lg font-extrabold text-[#2d3c32]">Keep your account secure</h3><p className="mt-1 text-sm leading-6 text-[#849087]">Choose a strong password you haven't used before. Your password is never displayed here.</p></div><form onSubmit={handleChangePassword} className="space-y-4">{fields.map(([label,value,setter])=><div key={label}><label className="mb-2 block text-xs font-bold text-[#536157]">{label}</label><input type="password" required minLength={6} autoComplete="new-password" value={value} onChange={e=>setter(e.target.value)} placeholder={label} className="h-12 w-full rounded-xl border border-[#e3e9e1] bg-[#fbfcfa] px-4 text-sm text-[#344238] outline-none transition focus:border-[#315c46] focus:ring-4 focus:ring-[#315c46]/10"/></div>)}<div className="flex justify-end border-t border-[#edf0eb] pt-5"><button type="submit" className="h-11 rounded-xl bg-[#315c46] px-7 text-sm font-extrabold text-white transition hover:bg-[#244735]">Update password</button></div></form></div>;
 };
 const Address = () => {
   const [open, setOpen] = useState(false);
