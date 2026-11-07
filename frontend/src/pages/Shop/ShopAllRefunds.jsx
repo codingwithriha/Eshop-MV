@@ -1,22 +1,15 @@
-import React from 'react'
-import DashboardHeader from '../../components/Shop/Layout/DashboardHeader'
-import DashboardSideBar from '../../components/Shop/Layout/DashboardSideBar'
+import React from "react";
+import DashboardHeader from "../../components/Shop/Layout/DashboardHeader";
+import DashboardSideBar from "../../components/Shop/Layout/DashboardSideBar";
 import AllRefundOrders from "../../components/Shop/AllRefundOrders";
 
-const ShopAllRefunds = () => {
-  return (
-    <div>
+const ShopAllRefunds = () => (
+  <div className="min-h-screen bg-[#f6f8f5]">
     <DashboardHeader />
-    <div className="flex justify-between w-full">
-        <div className="w-[80px] 800px:w-[330px]">
-          <DashboardSideBar active={10} />
-        </div>
-        <div className="w-full justify-center flex">
-           <AllRefundOrders />
-        </div>
-      </div>
-</div>
-  )
-}
-
-export default ShopAllRefunds
+    <DashboardSideBar active={10} />
+    <div className="ml-[80px] min-h-[calc(100vh-76px)] min-w-0 800px:ml-[330px]">
+      <AllRefundOrders />
+    </div>
+  </div>
+);
+export default ShopAllRefunds;
