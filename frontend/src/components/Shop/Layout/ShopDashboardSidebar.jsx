@@ -11,109 +11,39 @@ import { BiMessageSquareDetail } from "react-icons/bi";
 
 const ShopDashboardSidebar = ({ active }) => {
   const sidebarItems = [
-    { id: 1, icon: RxDashboard, label: "Dashboard", path: "/dashboard" },
-    { id: 2, icon: FiShoppingBag, label: "All Orders", path: "/dashboard-orders" },
-    { id: 3, icon: FiPackage, label: "All Products", path: "/dashboard-products" },
-    { id: 4, icon: AiOutlineFolderAdd, label: "Create Product", path: "/dashboard-create-product" },
-    { id: 5, icon: MdOutlineLocalOffer, label: "All Events", path: "/dashboard-events" },
-    { id: 6, icon: VscNewFile, label: "Create Event", path: "/dashboard-create-event" },
-    { id: 7, icon: CiMoneyBill, label: "Withdraw Money", path: "/dashboard-withdraw-money" },
-    { id: 8, icon: BiMessageSquareDetail, label: "Shop Inbox", path: "/dashboard-messages" },
-    { id: 9, icon: AiOutlineGift, label: "Discount Codes", path: "/dashboard-coupons" },
-    { id: 10, icon: HiOutlineReceiptRefund, label: "Refunds", path: "/dashboard-refunds" },
-    { id: 11, icon: CiSettings, label: "Settings", path: "/settings" },
+    { id: 1, icon: RxDashboard, label: "Overview", path: "/dashboard", group: "Workspace" },
+    { id: 2, icon: FiShoppingBag, label: "Orders", path: "/dashboard-orders", group: "Sales" },
+    { id: 3, icon: FiPackage, label: "Products", path: "/dashboard-products", group: "Catalog" },
+    { id: 4, icon: AiOutlineFolderAdd, label: "Add product", path: "/dashboard-create-product", group: "Catalog" },
+    { id: 5, icon: MdOutlineLocalOffer, label: "Events", path: "/dashboard-events", group: "Promotions" },
+    { id: 6, icon: VscNewFile, label: "Create event", path: "/dashboard-create-event", group: "Promotions" },
+    { id: 7, icon: AiOutlineGift, label: "Discount codes", path: "/dashboard-coupons", group: "Promotions" },
+    { id: 8, icon: CiMoneyBill, label: "Withdrawals", path: "/dashboard-withdraw-money", group: "Finance" },
+    { id: 9, icon: HiOutlineReceiptRefund, label: "Refunds", path: "/dashboard-refunds", group: "Finance" },
+    { id: 10, icon: BiMessageSquareDetail, label: "Inbox", path: "/dashboard-messages", group: "Workspace" },
+    { id: 11, icon: CiSettings, label: "Shop settings", path: "/settings", group: "Workspace" },
   ];
+  const groups=["Workspace","Sales","Catalog","Promotions","Finance"];
 
   return (
-    <div className="w-full h-[89vh] bg-gradient-to-b from-gray-50 via-white to-gray-100 shadow-lg overflow-y-auto sticky top-0 left-0 z-10 border-r border-gray-100">
-
-      {/* Header */}
-      <div className="p-6 border-b border-gray-100 bg-white sticky top-0 z-20">
-        <div className="flex items-center gap-3">
-          <div className="h-11 w-11 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 flex items-center justify-center shadow-md">
-            <FiShoppingBag className="text-white" size={22} />
-          </div>
-
-          <div>
-            <h3 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              Seller Portal
-            </h3>
-
-            <p className="text-xs text-gray-500">
-              Manage your shop
-            </p>
-          </div>
-        </div>
+    <aside className="sticky top-0 z-10 h-[calc(100vh-76px)] w-full overflow-y-auto border-r border-[#e5ebe3] bg-[#fbfcfa] px-3 py-6">
+      <div className="mb-7 flex items-center gap-3 px-3">
+        <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#315c46] text-white"><FiShoppingBag size={20}/></span>
+        <div><p className="font-display text-base font-extrabold tracking-tight text-[#26372d]">Seller studio</p><p className="text-[10px] font-medium text-[#879188]">Your business workspace</p></div>
       </div>
-
-      {/* Sidebar Items */}
-      <div className="py-4 px-2">
-
-        {sidebarItems.map((item) => {
-          const Icon = item.icon;
-          const isActive = active === item.id;
-
-          return (
-            <Link
-              key={item.id}
-              to={item.path}
-              className={`
-                flex items-center
-                px-5 py-3
-                mx-2 mb-2
-                rounded-xl
-                transition-all duration-300
-                group
-
-                ${
-                  isActive
-                    ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg scale-[1.02]"
-                    : "hover:bg-gray-100 text-gray-600 hover:text-gray-900 hover:translate-x-1"
-                }
-              `}
-            >
-              <div
-                className={`
-                  p-2 rounded-lg transition-all duration-300
-                  ${
-                    isActive
-                      ? "bg-white/20"
-                      : "bg-gray-100 group-hover:bg-white"
-                  }
-                `}
-              >
-                <Icon
-                  size={20}
-                  className={`
-                    ${
-                      isActive
-                        ? "text-white"
-                        : "text-gray-500 group-hover:text-blue-600"
-                    }
-                  `}
-                />
-              </div>
-
-              <h5
-                className={`
-                  hidden 800px:block
-                  pl-4 text-[15px] font-medium
-                  ${
-                    isActive
-                      ? "text-white"
-                      : "text-gray-700"
-                  }
-                `}
-              >
-                {item.label}
-              </h5>
-            </Link>
-          );
-        })}
-
-      </div>
-    </div>
+      {groups.map(group=><div key={group} className="mb-5">
+        <p className="mb-2 px-3 text-[10px] font-bold uppercase tracking-[.15em] text-[#a0aaa2]">{group}</p>
+        <div className="space-y-1">{sidebarItems.filter(item=>item.group===group).map(item=>{
+          const Icon=item.icon; const isActive=active===item.id;
+          return <Link key={item.id} to={item.path} className={`group flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold transition-all duration-200 ${isActive?"bg-[#315c46] text-white shadow-[0_8px_20px_rgba(49,92,70,.16)]":"text-[#68756c] hover:bg-[#edf2ec] hover:text-[#244735]"}`}>
+            <span className={`flex h-9 w-9 items-center justify-center rounded-lg ${isActive?"bg-white/15":"bg-[#f0f3ee] text-[#718176] group-hover:bg-white group-hover:text-[#315c46]"}`}><Icon size={19}/></span>
+            <span className="hidden 800px:block">{item.label}</span>
+            {isActive&&<span className="ml-auto hidden h-1.5 w-1.5 rounded-full bg-[#d9bd91] 800px:block"/>}
+          </Link>;
+        })}</div>
+      </div>)}
+      <div className="mt-8 rounded-2xl bg-[#edf2ec] p-4"><p className="text-xs font-bold text-[#315c46]">Grow with Eshop</p><p className="mt-1 text-[11px] leading-5 text-[#77847a]">Keep products, orders and promotions organised in one place.</p></div>
+    </aside>
   );
 };
-
 export default ShopDashboardSidebar;
