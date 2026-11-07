@@ -10,74 +10,33 @@ import { BiMessageSquareDetail } from "react-icons/bi";
 import { HiOutlineReceiptRefund } from "react-icons/hi";
 
 const DashboardSideBar = ({ active }) => {
-  const sidebarItems = [
-    { id: 1, icon: RxDashboard, label: "Dashboard", path: "/dashboard" },
-    { id: 2, icon: FiShoppingBag, label: "All Orders", path: "/dashboard-orders" },
-    { id: 3, icon: FiPackage, label: "All Products", path: "/dashboard-products" },
-    { id: 4, icon: AiOutlineFolderAdd, label: "Create Product", path: "/dashboard-create-product" },
-    { id: 5, icon: MdOutlineLocalOffer, label: "All Events", path: "/dashboard-events" },
-    { id: 6, icon: VscNewFile, label: "Create Event", path: "/dashboard-create-event" },
-    { id: 7, icon: CiMoneyBill, label: "Withdraw Money", path: "/dashboard-withdraw-money" },
-    { id: 8, icon: BiMessageSquareDetail, label: "Shop Inbox", path: "/dashboard-messages" },
-    { id: 9, icon: AiOutlineGift, label: "Discount Codes", path: "/dashboard-coupouns" },
-    { id: 10, icon: HiOutlineReceiptRefund, label: "Refunds", path: "/dashboard-refunds" },
-    { id: 11, icon: CiSettings, label: "Settings", path: "/settings" },
+  const groups = [
+    { title: "Workspace", items: [{ id:1,icon:RxDashboard,label:"Overview",path:"/dashboard" },{ id:8,icon:BiMessageSquareDetail,label:"Inbox",path:"/dashboard-messages" },{ id:11,icon:CiSettings,label:"Shop settings",path:"/settings" }] },
+    { title: "Sales", items: [{ id:2,icon:FiShoppingBag,label:"Orders",path:"/dashboard-orders" }] },
+    { title: "Catalog", items: [{ id:3,icon:FiPackage,label:"Products",path:"/dashboard-products" },{ id:4,icon:AiOutlineFolderAdd,label:"Add product",path:"/dashboard-create-product" }] },
+    { title: "Promotions", items: [{ id:5,icon:MdOutlineLocalOffer,label:"Events",path:"/dashboard-events" },{ id:6,icon:VscNewFile,label:"Create event",path:"/dashboard-create-event" },{ id:9,icon:AiOutlineGift,label:"Discount codes",path:"/dashboard-coupouns" }] },
+    { title: "Finance", items: [{ id:7,icon:CiMoneyBill,label:"Withdrawals",path:"/dashboard-withdraw-money" },{ id:10,icon:HiOutlineReceiptRefund,label:"Refunds",path:"/dashboard-refunds" }] },
   ];
 
   return (
-    <div className="w-full h-[89vh] bg-[#fbfcfa] shadow-none overflow-y-auto sticky top-0 left-0 z-10 border-r border-[#e5ebe3]">
-      
-      {/* Header */}
-      <div className="p-6 border-b border-gray-100">
-        <h3 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 text-[#315c46]">
-          Seller Portal
-        </h3>
-
-        <p className="text-xs text-gray-500 mt-1">
-          Manage your shop
-        </p>
+    <aside className="sticky top-0 z-10 h-[calc(100vh-76px)] w-full overflow-y-auto border-r border-[#e5ebe3] bg-[#fbfcfa] px-3 py-6">
+      <div className="mb-7 flex items-center gap-3 px-3">
+        <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#315c46] text-white"><FiShoppingBag size={20}/></span>
+        <div><p className="font-display text-base font-extrabold tracking-tight text-[#26372d]">Seller studio</p><p className="text-[10px] font-medium text-[#879188]">Your business workspace</p></div>
       </div>
-
-      {/* Sidebar Items */}
-      <div className="py-4">
-        {sidebarItems.map((item) => {
-          const Icon = item.icon;
-          const isActive = active === item.id;
-
-          return (
-            <Link
-              key={item.id}
-              to={item.path}
-              className={`w-full flex items-center px-6 py-3 mx-3 mb-2 rounded-xl transition-all duration-200 group ${
-                isActive
-                  ? "bg-[#315c46] text-white shadow-[0_8px_20px_rgba(49,92,70,.18)]"
-                  : "text-[#69766d] hover:bg-[#edf2ec] hover:text-[#244735]"
-              }`}
-            >
-              <Icon
-                size={24}
-                className={`${
-                  isActive
-                    ? "text-white"
-                    : "text-gray-500 group-hover:text-gray-700"
-                } transition-colors`}
-              />
-
-              <h5
-                className={`hidden 800px:block pl-3 text-[15px] font-medium ${
-                  isActive
-                    ? "text-white"
-                    : "text-gray-600 group-hover:text-gray-900"
-                }`}
-              >
-                {item.label}
-              </h5>
-            </Link>
-          );
-        })}
-      </div>
-    </div>
+      {groups.map(group=><div key={group.title} className="mb-5">
+        <p className="mb-2 px-3 text-[10px] font-bold uppercase tracking-[.15em] text-[#a0aaa2]">{group.title}</p>
+        <div className="space-y-1">{group.items.map(item=>{
+          const Icon=item.icon;const selected=active===item.id;
+          return <Link key={item.id} to={item.path} className={`group flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold transition-all duration-200 ${selected?"bg-[#315c46] text-white shadow-[0_8px_20px_rgba(49,92,70,.16)]":"text-[#68756c] hover:bg-[#edf2ec] hover:text-[#244735]"}`}>
+            <span className={`flex h-9 w-9 items-center justify-center rounded-lg ${selected?"bg-white/15":"bg-[#f0f3ee] text-[#718176] group-hover:bg-white group-hover:text-[#315c46]"}`}><Icon size={19}/></span>
+            <span className="hidden 800px:block">{item.label}</span>
+            {selected&&<span className="ml-auto hidden h-1.5 w-1.5 rounded-full bg-[#d9bd91] 800px:block"/>}
+          </Link>;
+        })}</div>
+      </div>)}
+      <div className="mt-8 rounded-2xl bg-[#edf2ec] p-4"><p className="text-xs font-bold text-[#315c46]">Grow with Eshop</p><p className="mt-1 text-[11px] leading-5 text-[#77847a]">Keep products, orders and promotions organised in one place.</p></div>
+    </aside>
   );
 };
-
 export default DashboardSideBar;
