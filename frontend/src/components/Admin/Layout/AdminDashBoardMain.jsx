@@ -71,10 +71,10 @@ const AdminDashBoardMain = () => {
       {isLoading ? (
         <Loader />
       ) : (
-        <div className="w-full p-6 bg-[#f6f8f5]">
-          <h3 className="text-[22px] font-Poppins pb-2">Overview</h3>
-          <div className="w-full block 800px:flex items-center justify-between">
-            <div className="w-full mb-4 800px:w-[30%] min-h-[20vh] bg-white shadow rounded px-2 py-5">
+        <main className="min-w-0 flex-1 bg-[#f6f8f5] p-5 sm:p-7">
+          <div className="mb-7 flex flex-wrap items-end justify-between gap-3"><div><p className="text-[10px] font-extrabold uppercase tracking-[.18em] text-[#66806e]">Platform overview</p><h1 className="mt-2 font-display text-3xl font-extrabold tracking-[-.04em] text-[#202923]">Good to see you, Admin.</h1><p className="mt-2 text-sm text-[#7b867e]">Here is what is happening across your marketplace.</p></div><span className="rounded-full border border-[#e1e8df] bg-white px-4 py-2 text-xs font-semibold text-[#718076]">Live overview</span></div>
+          <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-3">
+            <div className="min-h-[150px] rounded-2xl border border-[#e7ebe5] bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
               <div className="flex items-center">
                 <AiOutlineMoneyCollect
                   size={30}
@@ -124,13 +124,13 @@ const AdminDashBoardMain = () => {
                 {adminOrders && adminOrders?.length}
               </h5>
               <Link to="/admin-orders">
-                <h5 className="pt-4 pl-[2] text-[#077f9c]">View Orders</h5>
+                <h5 className="pt-4 pl-[2] text-[#315c46]">View Orders</h5>
               </Link>
             </div>
           </div>
           <br />
 
-          <div className="w-full min-h-[45vh] bg-white border border-[#e7ebe5] shadow-sm rounded-2xl p-3">
+          <section className="mt-5 w-full rounded-2xl border border-[#e7ebe5] bg-white p-3 shadow-sm"><div className="px-3 pb-3 pt-2"><h2 className="font-display text-lg font-extrabold text-[#26372d]">Recent orders</h2><p className="mt-1 text-xs text-[#879188]">Latest marketplace transactions</p></div>
             <DataGrid
               rows={row}
               columns={columns}
