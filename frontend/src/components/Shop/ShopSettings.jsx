@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { backend_url, server } from "../../server";
-import { FiCamera, FiMapPin, FiPhone, FiMap, FiSave, FiStore, FiCheckCircle } from "react-icons/fi";
+import { FiCamera, FiMapPin, FiPhone, FiMap, FiSave, FiShoppingBag, FiCheckCircle } from "react-icons/fi";
 import { getSeller } from "../../redux/actions/seller";
 import { toast } from "react-toastify";
 import axios from "axios";
@@ -79,7 +79,7 @@ const ShopSettings = () => {
             </div>
           </aside>
           <form onSubmit={updateHandler} className="rounded-2xl border border-[#e6ebe4] bg-white p-5 shadow-[0_5px_24px_rgba(35,52,40,.04)] sm:p-7">
-            <div className="mb-6 flex items-center gap-3 border-b border-[#edf0ec] pb-5"><span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#edf3ed] text-[#315c46]"><FiStore size={19}/></span><div><h2 className="text-base font-bold text-[#29372e]">Public shop information</h2><p className="text-xs text-[#879188]">These details help customers identify and contact your shop.</p></div></div>
+            <div className="mb-6 flex items-center gap-3 border-b border-[#edf0ec] pb-5"><span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#edf3ed] text-[#315c46]"><FiShoppingBag size={19}/></span><div><h2 className="text-base font-bold text-[#29372e]">Public shop information</h2><p className="text-xs text-[#879188]">These details help customers identify and contact your shop.</p></div></div>
             <div className="space-y-5">
               <div><label className="text-xs font-bold text-[#536157]">Shop name <span className="text-red-500">*</span></label><input required value={name} onChange={(e) => setName(e.target.value)} className={field} placeholder="Your shop name"/></div>
               <div><label className="text-xs font-bold text-[#536157]">Shop description</label><textarea rows={4} value={description} onChange={(e) => setDescription(e.target.value)} className={field + " resize-y"} placeholder="Tell customers what your shop offers."/></div>
