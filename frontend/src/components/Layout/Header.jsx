@@ -39,7 +39,7 @@ const Header = ({ activeHeading }) => {
     const filterProductData =
       allProducts &&
       allProducts.filter((product) =>
-        product.name.toLowerCase().includes(term.toLowerCase())
+        product?.name?.toLowerCase().includes(term.toLowerCase())
       );
     setSearchData(filterProductData);
   };
@@ -99,7 +99,7 @@ const Header = ({ activeHeading }) => {
                       >
                         <div className="w-full flex items-center py-3 hover:bg-gray-50 rounded-lg px-2 transition-colors">
                           <img
-                            src={i.images[0].url}
+                            src={i.images?.[0]?.url || "https://placehold.co/100x100/f0f3ee/718176?text=Item"}
                             className="w-[50px] h-[50px] rounded-lg object-cover mr-4"
                             alt={i.name}
                           />
@@ -113,12 +113,10 @@ const Header = ({ activeHeading }) => {
             {/* ending searchBox styling */}
           </div>
           {/* Styling for seller button */}
-          <div className={`${styles.button} !bg-[#315c46] !rounded-full !h-[45px] !px-6 hover:shadow-lg hover:shadow-[#315c46]/20 transition-all`}>
-            <Link to={`${isSeller ? "/dashboard" : "/shop-create"}`}>
-              <h1 className="text-white flex items-center font-semibold">
-                {isSeller ? "DASHBOARD" : "CREATE SHOP"}
-                <IoIosArrowForward className="ml-2" />
-              </h1>
+          <div className="group">
+            <Link to={`${isSeller ? "/dashboard" : "/shop-create"}`} className="inline-flex h-[46px] items-center gap-3 rounded-full bg-[#315c46] px-6 text-xs font-extrabold tracking-[.08em] text-white shadow-[0_8px_20px_rgba(49,92,70,.16)] transition duration-200 hover:-translate-y-0.5 hover:bg-[#244735] hover:shadow-[0_12px_26px_rgba(49,92,70,.22)]">
+              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white/15"><IoIosArrowForward /></span>
+              {isSeller ? "SELLER DASHBOARD" : "OPEN YOUR SHOP"}
             </Link>
           </div>
           {/* ending styling for selling button */}
@@ -314,14 +312,7 @@ const Header = ({ activeHeading }) => {
                 )}
               </div>
               <Navbar active={activeHeading} />
-              <div className={`${styles.button} ml-4 !rounded-[4px]`}>
-                <Link to={`${isSeller ? "/dashboard" : "/shop-create"}`}>
-                  <h1 className="text-white flex items-center">
-                    {isSeller ? "DASHBOARD" : "CREATE SHOP"}
-                    <IoIosArrowForward className="ml-1" />
-                  </h1>
-                </Link>
-              </div>
+              <div className="mx-4 mt-6"><Link to={`${isSeller ? "/dashboard" : "/shop-create"}`} className="flex min-h-[48px] items-center justify-center gap-2 rounded-full bg-[#315c46] px-5 text-xs font-extrabold tracking-wide text-white transition hover:bg-[#244735]">{isSeller ? "SELLER DASHBOARD" : "OPEN YOUR SHOP"}<IoIosArrowForward /></Link></div>
               <br />
               <br />
               <br />
