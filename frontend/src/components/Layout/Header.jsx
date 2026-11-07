@@ -65,11 +65,10 @@ const Header = ({ activeHeading }) => {
         <div className="hidden 800px:h-[60px] 800px:my-[20px] 800px:flex items-center justify-between">
           <div>
             <Link to="/">
-              <img
-                src="https://shopo.quomodothemes.website/assets/images/logo.svg"
-                alt="home-logo"
-                className="h-[45px] cursor-pointer hover:scale-105 transition-transform"
-              />
+              <span className="inline-flex items-center gap-3 transition-transform hover:scale-[1.02]">
+                <span className="flex h-11 w-11 items-center justify-center rounded-[14px] bg-[#315c46] text-xl font-black text-white shadow-sm">E</span>
+                <span className="flex flex-col leading-none"><span className="font-display text-[25px] font-extrabold tracking-tight text-[#26372d]">eshop<span className="text-[#bd9664]">.</span></span><span className="mt-1 text-[9px] font-bold uppercase tracking-[.22em] text-[#819087]">Marketplace</span></span>
+              </span>
             </Link>
           </div>
           {/* Search Box Working */}
@@ -237,11 +236,7 @@ const Header = ({ activeHeading }) => {
           </div>
           <div>
             <Link to="/">
-              <img
-                src="https://shopo.quomodothemes.website/assets/images/logo.svg"
-                alt="home-logo"
-                className="mt-3 cursor-pointer"
-              />
+              <span className="mt-2 inline-flex items-center gap-2"><span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#315c46] text-lg font-black text-white">E</span><span className="font-display text-xl font-extrabold text-[#26372d]">eshop<span className="text-[#bd9664]">.</span></span></span>
             </Link>
           </div>
           <div>
