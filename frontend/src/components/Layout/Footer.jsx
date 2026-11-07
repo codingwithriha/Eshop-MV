@@ -8,11 +8,11 @@ const Footer = () => {
   const linkGroups=[{title:"Discover",items:footerProductLinks},{title:"Marketplace",items:footerCompanyLinks},{title:"Help & support",items:footerSupportLinks}];
   return (
     <footer className="mt-16 bg-[#1f3026] text-white">
-      <div className="store-section relative -top-8 rounded-[22px] bg-[#e9eee7] px-6 py-8 text-[#26372d] shadow-[0_18px_45px_rgba(0,0,0,.12)] sm:px-9 md:flex md:items-center md:justify-between md:gap-8">
-        <div className="max-w-lg"><span className="text-[10px] font-bold uppercase tracking-[.18em] text-[#54745e]">Stay in the know</span><h2 className="mt-2 font-display text-2xl font-extrabold tracking-tight sm:text-3xl">Good finds, straight to your inbox.</h2><p className="mt-2 text-sm leading-6 text-[#69766d]">Get updates on new arrivals, special events and marketplace news.</p></div>
-        <form className="mt-6 flex w-full max-w-md gap-2 md:mt-0" onSubmit={(e)=>e.preventDefault()}>
-          <label className="flex min-w-0 flex-1 items-center gap-2 rounded-full border border-[#d8e0d6] bg-white px-4"><FiMail className="shrink-0 text-[#718276]"/><input type="email" aria-label="Email address" className="h-12 min-w-0 w-full bg-transparent text-sm outline-none placeholder:text-[#9aa49c]" placeholder="Your email address"/></label>
-          <button type="submit" className="rounded-full bg-[#315c46] px-5 text-sm font-bold text-white transition hover:bg-[#244735]">Join</button>
+      <div className="store-section relative -top-8 overflow-hidden rounded-[26px] border border-white/70 bg-[#edf2eb] px-6 py-8 text-[#26372d] shadow-[0_18px_45px_rgba(0,0,0,.13)] sm:px-9 md:flex md:items-center md:justify-between md:gap-8">
+        <div className="max-w-lg"><span className="inline-flex items-center gap-2 text-[10px] font-extrabold uppercase tracking-[.2em] text-[#54745e]"><span className="h-1.5 w-1.5 rounded-full bg-[#b89a69]"/> The Eshop edit</span><h2 className="mt-3 font-display text-2xl font-extrabold leading-tight tracking-tight sm:text-3xl">A little inspiration, delivered.</h2><p className="mt-2 max-w-md text-sm leading-6 text-[#69766d]">Be first to hear about fresh arrivals, special finds and upcoming marketplace events.</p></div>
+        <form className="mt-6 flex w-full max-w-md flex-col gap-2 sm:flex-row md:mt-0" onSubmit={(e)=>e.preventDefault()}>
+          <label className="flex min-w-0 flex-1 items-center gap-2 rounded-2xl border border-[#d8e0d6] bg-white px-4 shadow-sm"><FiMail className="shrink-0 text-[#718276]"/><input type="email" aria-label="Email address" className="h-12 min-w-0 w-full bg-transparent text-sm outline-none placeholder:text-[#9aa49c]" placeholder="Your email address"/></label>
+          <button type="submit" className="h-12 rounded-2xl bg-[#315c46] px-7 text-sm font-bold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-[#244735]">Join</button>
         </form>
       </div>
       <div className="store-section grid gap-12 pb-12 pt-2 sm:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr_1fr]">
