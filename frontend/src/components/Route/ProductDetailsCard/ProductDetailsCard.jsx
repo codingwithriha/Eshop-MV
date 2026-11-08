@@ -70,10 +70,10 @@ const ProductDetailsCard = ({ setOpen, data }) => {
   };
 
   return (
-    <div className="bg-[#fff]">
+    <div className="bg-[#202923]/60 backdrop-blur-sm">
       {data ? (
-        <div className="fixed w-full h-screen top-0 left-0 bg-[#00000030] z-40 flex items-center justify-center">
-          <div className="w-[90%] 800px:w-[60%] h-[90vh] overflow-y-scroll 800px:h-[75vh] bg-white rounded-md shadow-sm relative p-4">
+        <div className="fixed w-full h-screen top-0 left-0 bg-[#202923]/60 backdrop-blur-sm z-40 flex items-center justify-center">
+          <div className="w-[90%] 800px:w-[60%] h-[90vh] overflow-y-scroll 800px:h-[75vh] bg-[#fbfcfa] rounded-[24px] border border-[#e7ebe5] shadow-2xl relative p-4">
             <RxCross1
               size={30}
               className="absolute right-3 top-3 z-50"
@@ -99,7 +99,7 @@ const ProductDetailsCard = ({ setOpen, data }) => {
                   </Link>
                 </div>
                 <div
-                  className={`${styles.button} bg-[#000] mt-4 rounded-[4px] h-11`}
+                  className={`${styles.button} bg-[#315c46] mt-4 rounded-full h-11`}
                   onClick={handleMessageSubmit}
                 >
                   <span className="text-[#fff] flex items-center">

@@ -114,6 +114,25 @@ router.post(
     }
   })
 );
+// Administrator login: verify role before issuing an authentication cookie.
+router.post(
+  "/login-admin",
+  catchAsyncError(async (req, res, next) => {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return next(new ErrorHandler("Email and password are required.", 400));
+    }
+    const user = await User.findOne({ email }).select("+password");
+    if (!user) {
+      return next(new ErrorHandler("Invalid administrator credentials.", 401));
+    }
+    const validPassword = await user.comparePassword(password);
+    if (!validPassword || user.role !== "Admin") {
+      return next(new ErrorHandler("Invalid administrator credentials.", 401));
+    }
+    sendToken(user, 200, res);
+  })
+);
 //login_user Route
 router.post(
   "/login-user",

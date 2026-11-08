@@ -1,150 +1,16 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { DataGrid } from "@mui/x-data-grid";
-import { Button } from "@mui/material";
-import { AiOutlineDelete, AiOutlineEye } from "react-icons/ai";
-import { RxCross1 } from "react-icons/rx";
-import styles from "../../styles/styles";
+import React,{useEffect,useState} from "react";
+import {useDispatch,useSelector} from "react-redux";
+import {getAllSellers} from "../../redux/actions/seller";
 import axios from "axios";
-import { server } from "../../server";
-import { toast } from "react-toastify";
-import { getAllSellers } from "../../redux/actions/seller";
-import { Link } from "react-router-dom";
-const AllSellers = () => {
-  const dispatch = useDispatch();
-  const [open, setOpen] = useState(false);
-  const { sellers } = useSelector((state) => state.seller);
-  const [userId, setUserId] = useState("");
-  useEffect(() => {
-    dispatch(getAllSellers());
-  }, [dispatch]);
-
-  const handleDelete = async (id) => {
-    await axios
-      .delete(`${server}/shop/admin-delete-seller/${id}`, {
-        withCredentials: true,
-      })
-      .then((res) => {
-        toast.success(res.data.message);
-        dispatch(getAllSellers());
-      })
-      .catch((error) => {
-        toast.error(error.response?.data.message);
-      });
-  };
-
-  const columns = [
-    { field: "id", headerName: "Seller ID", flex: 0.7 },
-
-    {
-      field: "name",
-      headerName: "Name",
-      flex: 0.7,
-    },
-    {
-      field: "email",
-      headerName: "Email",
-      type: "email",
-      flex: 0.7,
-    },
-    {
-      field: "address",
-      headerName: "Seller Address",
-      type: "address",
-      flex: 0.7,
-    },
-
-    {
-      field: "joinedAt",
-      headerName: "joinedAt",
-      type: "text",
-      flex: 0.8,
-    },
-    {
-      field: " ",
-      flex: 1,
-      headerName: "Preview Shop",
-      type: "text",
-      sortable: false,
-      renderCell: (params) => {
-        return (
-          <>
-            <Link to={`/shop/preview/${params.id}`}>
-              <Button onClick={() => setUserId(params.id) || setOpen(true)}>
-                <AiOutlineEye size={20} />
-              </Button>
-            </Link>
-          </>
-        );
-      },
-    },
-    {
-      field: "  ",
-      flex: 1,
-      headerName: "Delete Seller",
-      type: "number",
-      sortable: false,
-      renderCell: (params) => {
-        return (
-          <>
-            <Button onClick={() => setUserId(params.id) || setOpen(true)}>
-              <AiOutlineDelete size={20} />
-            </Button>
-          </>
-        );
-      },
-    },
-  ];
-  const row = [];
-  sellers &&
-    sellers.forEach((item) => {
-      row.push({
-        id: item._id,
-        name: item.name,
-        email: item.email,
-        joinedAt: item.createdAt.slice(0, 10),
-        address: item.address,
-      });
-    });
-  return (
-    <div className="w-full flex justify-center pt-5">
-      <div className="w-[97%]">
-        <h5 className="text-[22px] pb-2 font-Poppins">All Seller</h5>
-        <DataGrid
-          rows={row}
-          columns={columns}
-          pageSize={4}
-          disableSelectionOnClick
-          autoHeight
-        />
-      </div>
-      {open && (
-        <div className="w-full fixed top-0 left-0 z-[999] bg-[#00000039] flex items-center justify-center h-screen">
-          <div className="w-[95%] 800px:w-[40%] min-h-[20vh] bg-white rounded shadow p-5">
-            <div className="w-full flex justify-end cursor-pointer">
-              <RxCross1 size={25} onClick={() => setOpen(false)} />
-            </div>
-            <h3 className="text-[25px] text-center py-5 font-Poppins text-[#000000cb]">
-              Are you sure you wanna delete this user?
-            </h3>
-            <div className="w-full flex items-center justify-center">
-              <div
-                className={`${styles.button} text-white text-[18px] !h-[42px] mr-4`}
-                onClick={() => setOpen(false)}
-              >
-                cancel
-              </div>
-              <div
-                className={`${styles.button} text-white text-[18px] !h-[42px] ml-4`}
-                onClick={() => setOpen(false) || handleDelete(userId)}
-              >
-                confirm
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-};
+import {server} from "../../server";
+import {toast} from "react-toastify";
+import {Link} from "react-router-dom";
+import {FiEye,FiTrash2,FiUsers} from "react-icons/fi";
+import AdminPageFrame from "./AdminPageFrame";
+import AdminDataTable from "./AdminDataTable";
+const AllSellers=()=>{const dispatch=useDispatch();const {sellers=[]}=useSelector(s=>s.seller);const [target,setTarget]=useState(null);useEffect(()=>{dispatch(getAllSellers());},[dispatch]);
+const remove=async()=>{try{const {data}=await axios.delete(server+"/shop/admin-delete-seller/"+target,{withCredentials:true});toast.success(data.message||"Seller deleted.");setTarget(null);dispatch(getAllSellers());}catch(e){toast.error(e.response?.data?.message||"Unable to delete seller.");}};
+const rows=sellers.map(x=>({id:x._id,name:x.name||"—",email:x.email||"—",address:x.address||"—",joined:x.createdAt?new Date(x.createdAt).toLocaleDateString():"—"}));
+const columns=[{field:"name",headerName:"Seller",minWidth:150,flex:1,renderCell:p=><div><p className="font-bold text-[#344238]">{p.value}</p><p className="text-[10px] text-[#9aa49c]">{String(p.id).slice(-8)}</p></div>},{field:"email",headerName:"Email",minWidth:190,flex:1.2},{field:"address",headerName:"Address",minWidth:150,flex:1},{field:"joined",headerName:"Joined",minWidth:110},{field:"actions",headerName:"Actions",sortable:false,minWidth:115,renderCell:p=><div className="flex items-center gap-2"><Link title="Preview shop" to={"/shop/preview/"+p.id} className="rounded-lg bg-[#edf3ed] p-2 text-[#315c46]"><FiEye/></Link><button title="Delete seller" onClick={()=>setTarget(p.id)} className="rounded-lg bg-[#fff2ef] p-2 text-[#b66b5d]"><FiTrash2/></button></div>}];
+return <><AdminPageFrame title="Sellers" description="Manage marketplace sellers and review their storefronts." icon={FiUsers} stats={[{label:"Total sellers",value:sellers.length,note:"Registered seller accounts"},{label:"Active storefronts",value:sellers.length,note:"Seller records available"}]}><AdminDataTable rows={rows} columns={columns} searchFields={["name","email","address"]} emptyTitle="No sellers yet"/></AdminPageFrame>{target&&<div className="fixed inset-0 z-[1200] flex items-center justify-center bg-[#17231b]/50 p-4"><div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl"><h3 className="text-lg font-extrabold text-[#26372d]">Delete this seller?</h3><p className="mt-2 text-sm text-[#78857b]">This action cannot be undone. The seller account and shop will be removed.</p><div className="mt-6 flex justify-end gap-2"><button onClick={()=>setTarget(null)} className="rounded-xl border px-4 py-2.5 text-sm font-bold text-[#536157]">Cancel</button><button onClick={remove} className="rounded-xl bg-[#a95f53] px-4 py-2.5 text-sm font-bold text-white">Delete seller</button></div></div></div>}</>};
 export default AllSellers;

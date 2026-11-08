@@ -1,20 +1,15 @@
-import React from 'react'
-import DashboardHeader from '../../components/Shop/Layout/DashboardHeader'
-import DashboardSideBar from '../../components/Shop/Layout/DashboardSideBar'
+import React from "react";
+import DashboardHeader from "../../components/Shop/Layout/DashboardHeader";
+import DashboardSideBar from "../../components/Shop/Layout/DashboardSideBar";
 import DashboardMessages from "../../components/Shop/DashboardMessages";
 
-const ShopInboxPage = () => {
-  return (
-    <div>
+const ShopInboxPage = () => (
+  <div className="min-h-screen bg-[#f6f8f5]">
     <DashboardHeader />
-    <div className="flex items-start justify-between w-full">
-      <div className="w-[80px] 800px:w-[330px]">
-        <DashboardSideBar active={8} />
-      </div>
-       <DashboardMessages />
-    </div>
+    <DashboardSideBar active={8} />
+    <main className="ml-[80px] min-h-[calc(100vh-76px)] min-w-0 p-3 sm:p-5 800px:ml-[330px]">
+      <DashboardMessages />
+    </main>
   </div>
-  )
-}
-
-export default ShopInboxPage
+);
+export default ShopInboxPage;

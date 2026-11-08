@@ -1,0 +1,49 @@
+name: Production build checks
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main, design/premium-storefront-refresh]
+
+jobs:
+  frontend-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Install frontend dependencies
+        working-directory: frontend
+        run: npm ci
+      - name: Build production frontend
+        working-directory: frontend
+        run: npm run build
+        env:
+          CI: "false"
+          REACT_APP_BACKEND_URL: https://example.invalid/api/v2
+          REACT_APP_API_URL: https://example.invalid
+          REACT_APP_SOCKET_URL: https://example.invalid
+
+  backend-and-socket-syntax:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install backend dependencies
+        working-directory: backend
+        run: npm ci
+      - name: Check backend JavaScript syntax
+        run: |
+          node --check backend/server.js
+          node --check backend/app.js
+      - name: Install socket dependencies
+        working-directory: socket
+        run: npm ci
+      - name: Check socket JavaScript syntax
+        run: node --check socket/index.js

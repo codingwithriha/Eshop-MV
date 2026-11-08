@@ -120,7 +120,7 @@ const ProductDetails = ({ data }) => {
   };
 
   return (
-    <div className="bg-[#fff] ">
+    <div className="min-h-screen bg-[#f7f8f5] py-8">
       {data ? (
         <div className={` ${styles.section} w-[90%] 800px:w-[80%] `}>
           <div className="w-[100%] py-5">
@@ -175,7 +175,7 @@ const ProductDetails = ({ data }) => {
                 <div className="flex items-center mt-12 justify-between pr-3 ">
                   <div>
                     <button
-                      className="bg-gradient-to-r from-teal-400 to-teal-500 text-white font-bold rounded-md px-4 py-2 shadow-lg hover:opacity-95 transition duration-300 ease-in-out"
+                      className="bg-gradient-to-r from-teal-400 to-teal-500 text-white font-bold rounded-2xl px-4 py-2 shadow-lg hover:opacity-95 transition duration-300 ease-in-out"
                       onClick={decrementCount}
                     >
                       -

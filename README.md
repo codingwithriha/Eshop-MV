@@ -500,3 +500,39 @@ This project is built for educational purposes, based on the Becodemy Multi-Vend
 Built with ❤️ by codingwithriha
 
 </div>
+
+
+## Production deployment checklist
+
+The UI is built with Create React App and deployed separately from the API and Socket.IO service.
+
+### Vercel frontend
+- Set the Vercel project **Root Directory** to `frontend`.
+- Build command: `npm run build`.
+- Output directory: `build`.
+- Add these environment variables for **Production** (and Preview if previews should use the hosted services):
+  - `REACT_APP_BACKEND_URL=https://YOUR-BACKEND-HOST/api/v2`
+  - `REACT_APP_API_URL=https://YOUR-BACKEND-HOST`
+  - `REACT_APP_SOCKET_URL=https://YOUR-SOCKET-HOST`
+- Redeploy after changing any `REACT_APP_*` value; CRA embeds these values at build time.
+- `frontend/vercel.json` rewrites application routes to `index.html`, so refreshing routes such as `/profile`, `/inbox`, and dashboard URLs does not return a Vercel 404.
+
+### Backend service
+- Deploy the `backend` directory as a Node.js service with start command `npm start` and Node.js 22.
+- Configure `FRONTEND_URL` to the exact deployed frontend origin (for example, `https://eshop-mv.vercel.app`, without a trailing slash).
+- Configure these backend variables in the hosting dashboard (use the exact names read by the current code): `DB_URL`, `JWT_SECRET_KEY`, `JWT_EXPIRES`, `ACTIVATION_SECRET`, `FRONTEND_URL`, `CLOUDINARY_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`, `STRIPE_SECRET_KEY`, and `STRIPE_API_KEY`. Email delivery currently uses SMTP, so also set `SMTP_HOST`, `SMTP_PORT`, `SMTP_MAIL`, and `SMTP_PASSWORD`. Never commit `.env` files.
+- Confirm `GET /health` returns HTTP 200 and test authentication, product/event image delivery, checkout and order flows against production services.
+
+### Socket.IO service
+- Deploy the `socket` directory as a persistent Node.js web service with start command `npm start`.
+- Set `FRONTEND_URL` to the exact deployed frontend origin and set `PORT` only if required by the host.
+- Set frontend `REACT_APP_SOCKET_URL` to the socket service's HTTPS origin (not its REST API URL).
+- Verify the socket host root responds and that buyer ↔ seller chat connects in two separate browser sessions.
+
+### Before going live
+- Run the GitHub Actions production build check and resolve any failures.
+- In the deployed site, hard-refresh the homepage and directly open/refresh buyer, seller, and admin routes.
+- Test mobile/tablet/desktop layouts, login/logout and role protection, image uploads, cart/wishlist persistence, Stripe test-mode checkout, order creation, withdrawals and real-time chat.
+- Use Stripe live keys only after test-mode checkout is verified. Confirm the payment webhook and allowed payment methods with the backend host before accepting live payments.
+
+Do not use the example.invalid values from CI as deployment settings. Replace all placeholders with the real deployed service origins.

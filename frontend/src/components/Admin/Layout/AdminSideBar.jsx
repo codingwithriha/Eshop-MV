@@ -6,63 +6,46 @@ import { FiShoppingBag } from "react-icons/fi";
 import { GrWorkshop } from "react-icons/gr";
 import { HiOutlineUserGroup } from "react-icons/hi";
 import { FaProductHunt } from "react-icons/fa";
-import { MdEmojiEvents } from "react-icons/md";
-import { MdOutlineSettings } from "react-icons/md";
+import { MdEmojiEvents, MdOutlineSettings } from "react-icons/md";
 
 const AdminSidebar = ({ active }) => {
   const sidebarItems = [
-    { id: 1, icon: RxDashboard, label: "Dashboard", path: "/admin/dashboard" },
-    { id: 2, icon: FiShoppingBag, label: "All Orders", path: "/admin-orders" },
-    { id: 3, icon: HiOutlineUserGroup, label: "All Sellers", path: "/admin-sellers" },
-    { id: 4, icon: GrWorkshop, label: "All Users", path: "/admin-users" },
-    { id: 5, icon: FaProductHunt, label: "All Products", path: "/admin-products" },
-    { id: 6, icon: MdEmojiEvents, label: "All Events", path: "/admin-events" },
-    { id: 7, icon: CiMoneyBill, label: "Withdraw Requests", path: "/admin-withdraw-request" },
-    { id: 8, icon: MdOutlineSettings, label: "Settings", path: "/admin-settings" },
+    { id: 1, icon: RxDashboard, label: "Dashboard", path: "/admin/dashboard", group: "Workspace" },
+    { id: 2, icon: FiShoppingBag, label: "Orders", path: "/admin-orders", group: "Management" },
+    { id: 3, icon: HiOutlineUserGroup, label: "Sellers", path: "/admin-sellers", group: "Management" },
+    { id: 4, icon: GrWorkshop, label: "Customers", path: "/admin-users", group: "Management" },
+    { id: 5, icon: FaProductHunt, label: "Products", path: "/admin-products", group: "Catalog" },
+    { id: 6, icon: MdEmojiEvents, label: "Events", path: "/admin-events", group: "Catalog" },
+    { id: 7, icon: CiMoneyBill, label: "Withdrawals", path: "/admin-withdraw-request", group: "Finance" },
+    { id: 8, icon: MdOutlineSettings, label: "Settings", path: "/admin-settings", group: "System" },
   ];
 
   return (
-    <div className="w-full h-[89vh] bg-gradient-to-b from-gray-50 to-white shadow-lg overflow-y-auto sticky top-0 left-0 z-10 border-r border-gray-100">
-      {/* Header */}
-      <div className="p-6 border-b border-gray-100">
-        <h3 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-          Admin Portal
-        </h3>
-        <p className="text-xs text-gray-500 mt-1">Platform management</p>
+    <aside className="fixed left-0 top-[76px] z-20 h-[calc(100dvh-76px)] w-[80px] overflow-x-hidden overflow-y-auto overscroll-contain border-r border-[#e5ebe3] bg-[#fbfcfa] px-3 py-6 800px:w-[330px]">
+      <div className="mb-7 px-3">
+        <p className="text-[10px] font-extrabold uppercase tracking-[.18em] text-[#87958a]">Control centre</p>
+        <h2 className="mt-2 font-display text-lg font-extrabold tracking-tight text-[#26372d]">Manage your platform</h2>
       </div>
-
-      {/* Sidebar Items */}
-      <div className="py-4">
-        {sidebarItems.map((item) => {
-          const Icon = item.icon;
-          const isActive = active === item.id;
-          
-          return (
-            <Link
-              key={item.id}
-              to={item.path}
-              className={`w-full flex items-center px-6 py-3 mx-3 mb-2 rounded-xl transition-all duration-200 group ${
-                isActive
-                  ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-md"
-                  : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
-              }`}
-            >
-              <Icon
-                size={24}
-                className={`${isActive ? "text-white" : "text-gray-500 group-hover:text-gray-700"} transition-colors`}
-              />
-              <h5
-                className={`hidden 800px:block pl-3 text-[15px] font-medium ${
-                  isActive ? "text-white" : "text-gray-600 group-hover:text-gray-900"
-                }`}
-              >
-                {item.label}
-              </h5>
-            </Link>
-          );
-        })}
+      {["Workspace","Management","Catalog","Finance","System"].map((group)=>(
+        <div key={group} className="mb-5">
+          <p className="mb-2 px-3 text-[10px] font-bold uppercase tracking-[.15em] text-[#a0aaa2]">{group}</p>
+          <div className="space-y-1">
+            {sidebarItems.filter(item=>item.group===group).map((item)=>{
+              const Icon=item.icon; const isActive=active===item.id;
+              return <Link key={item.id} to={item.path} className={`group flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold transition-all duration-200 ${isActive?"bg-[#315c46] text-white shadow-[0_8px_20px_rgba(49,92,70,.16)]":"text-[#68756c] hover:bg-[#edf2ec] hover:text-[#244735]"}`}>
+                <span className={`flex h-9 w-9 items-center justify-center rounded-lg ${isActive?"bg-white/15":"bg-[#f0f3ee] text-[#718176] group-hover:bg-white group-hover:text-[#315c46]"}`}><Icon size={19}/></span>
+                <span className="hidden 800px:block">{item.label}</span>
+                {isActive&&<span className="ml-auto hidden h-1.5 w-1.5 rounded-full bg-[#d9bd91] 800px:block"/>}
+              </Link>;
+            })}
+          </div>
+        </div>
+      ))}
+      <div className="mt-8 rounded-2xl bg-[#edf2ec] p-4">
+        <p className="text-xs font-bold text-[#315c46]">Eshop-MV Admin</p>
+        <p className="mt-1 text-[11px] leading-5 text-[#77847a]">A clear view of your marketplace operations.</p>
       </div>
-    </div>
+    </aside>
   );
 };
 

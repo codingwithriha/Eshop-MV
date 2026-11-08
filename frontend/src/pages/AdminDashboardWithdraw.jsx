@@ -1,22 +1,14 @@
-import React from 'react'
-import AdminHeader from '../components/Layout/AdminHeader'
-import AdminSideBar from '../components/Admin/Layout/AdminSideBar'
-import AllWithdraw from "../components/Admin/AllWithdraw";
-
-const AdminDashboardWithdraw = () => {
-  return (
-    <div>
-    <AdminHeader />
-    <div className="w-full flex">
-      <div className="flex items-start justify-between w-full">
-        <div className="w-[80px] 800px:w-[330px]">
-          <AdminSideBar active={7} />
-        </div>
-         <AllWithdraw />
-      </div>
-    </div>
-  </div>
-  )
-}
-
-export default AdminDashboardWithdraw
+import React,{useEffect,useState} from "react";
+import axios from "axios";import {toast} from "react-toastify";import {server} from "../server";import {FiDollarSign,FiCheckCircle,FiClock} from "react-icons/fi";
+import AdminHeader from "../components/Layout/AdminHeader";import AdminSideBar from "../components/Admin/Layout/AdminSideBar";import AdminPageFrame from "../components/Admin/AdminPageFrame";import AdminDataTable from "../components/Admin/AdminDataTable";
+const AdminDashboardWithdraw=()=>{const [data,setData]=useState([]);const [target,setTarget]=useState(null);const [saving,setSaving]=useState(false);
+const load=()=>axios.get(server+"/withdraw/get-all-withdraw-request",{withCredentials:true}).then(r=>setData(r.data.withdraws||[])).catch(e=>toast.error(e.response?.data?.message||"Unable to load withdrawal requests."));
+useEffect(()=>{load();},[]);
+const approve=async()=>{if(!target)return;setSaving(true);try{await axios.put(server+"/withdraw/update-withdraw-request/"+target.id,{sellerId:target.sellerId},{withCredentials:true});toast.success("Withdrawal marked as successful.");setTarget(null);await load();}catch(e){toast.error(e.response?.data?.message||"Unable to update withdrawal.");}finally{setSaving(false);}};
+const rows=data.map(w=>({id:w._id,shop:w.seller?.name||"Unknown shop",sellerId:w.seller?._id||"",amount:Number(w.amount||0),status:w.status||"Processing",date:w.createdAt?new Date(w.createdAt).toLocaleDateString():"—"}));
+const columns=[{field:"id",headerName:"Request",minWidth:150,flex:1,renderCell:p=><span className="font-bold text-[#344238]">{"#"+String(p.id).slice(-9).toUpperCase()}</span>},{field:"shop",headerName:"Shop",minWidth:140,flex:1},{field:"amount",headerName:"Amount",minWidth:110,renderCell:p=><span className="font-bold text-[#315c46]">{"$"+Number(p.value||0).toFixed(2)}</span>},{field:"status",headerName:"Status",minWidth:120,renderCell:p=><span className={"rounded-full px-3 py-1 text-[10px] font-bold "+(String(p.value).toLowerCase()==="succeed"?"bg-[#edf3ed] text-[#315c46]":"bg-[#fbf3e8] text-[#9a7546]")}>{p.value}</span>},{field:"date",headerName:"Requested",minWidth:110},{field:"action",headerName:"Action",minWidth:130,sortable:false,renderCell:p=>String(p.row.status).toLowerCase()==="processing"?<button onClick={()=>setTarget(p.row)} className="rounded-lg bg-[#315c46] px-3 py-2 text-[10px] font-bold text-white hover:bg-[#254b37]">Mark paid</button>:<span className="inline-flex items-center gap-1 text-[10px] font-semibold text-[#6f8a74]"><FiCheckCircle/> Completed</span>}];
+const pending=data.filter(w=>String(w.status).toLowerCase()==="processing");
+const total=data.reduce((a,w)=>a+Number(w.amount||0),0);
+return <div className="min-h-screen bg-[#f6f8f5]"><AdminHeader/><div className="flex w-full items-start"><aside className="w-[80px] shrink-0 800px:w-[330px]"><AdminSideBar active={7}/></aside><AdminPageFrame title="Withdrawals" description="Review seller payout requests and confirm completed transfers." icon={FiDollarSign} stats={[{label:"Total requests",value:data.length,note:"All seller payout requests"},{label:"Awaiting action",value:pending.length,note:"Requests marked Processing"},{label:"Requested amount",value:"$"+total.toFixed(2),note:"Combined request value"}]}><AdminDataTable rows={rows} columns={columns} searchFields={["id","shop","status"]} emptyTitle="No withdrawal requests"/></AdminPageFrame></div>
+{target&&<div className="fixed inset-0 z-[1200] flex items-center justify-center bg-[#17231b]/50 p-4"><div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl"><h3 className="text-lg font-extrabold text-[#26372d]">Confirm payout completion?</h3><p className="mt-2 text-sm leading-6 text-[#78857b]">You are marking a <strong>{"$"+Number(target.amount||0).toFixed(2)}</strong> withdrawal for <strong>{target.shop}</strong> as successful. Only continue after you have sent the payment.</p><div className="mt-6 flex justify-end gap-2"><button onClick={()=>setTarget(null)} className="rounded-xl border px-4 py-2.5 text-sm font-bold text-[#536157]">Cancel</button><button disabled={saving} onClick={approve} className="rounded-xl bg-[#315c46] px-4 py-2.5 text-sm font-bold text-white disabled:opacity-60">{saving?"Updating...":"Confirm paid"}</button></div></div></div>}</div>};
+export default AdminDashboardWithdraw;

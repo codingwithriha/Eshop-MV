@@ -7,9 +7,7 @@ import { TfiGallery } from "react-icons/tfi";
 import { format } from "timeago.js";
 import { AiOutlineArrowRight, AiOutlineSend } from "react-icons/ai";
 import styles from "../../styles/styles";
-import SocketIO from "socket.io-client";
-const ENDPOINTS = "https://eshop-mv-socket.up.railway.app";
-const socketId = SocketIO(ENDPOINTS, { transports: ["websocket"] });
+import socketId from "../../socket";
 const DashBoardMessages = () => {
   const [open, setOpen] = useState(false);
   const [images, setImages] = useState({});
@@ -190,10 +188,10 @@ const DashBoardMessages = () => {
   };
 
   return (
-    <div className="w-full bg-white m-5 h-[85vh] overflow-y-scroll rounded ">
+    <div className="flex h-[calc(100vh-112px)] min-h-[560px] w-full flex-col overflow-hidden rounded-2xl border border-[#e6ebe4] bg-white shadow-[0_5px_24px_rgba(35,52,40,.04)]">
       {!open && (
         <>
-          <h1 className="text-center text-[30px] py-3 font-Poppins ">
+          <h1 className="border-b border-[#edf0ec] px-6 py-5 text-left font-display text-2xl font-extrabold text-[#26372d]">
             All Messages
           </h1>
           {conversation.map((item, index) => (
@@ -262,8 +260,8 @@ const MessageList = ({
 
   return (
     <div
-      className={`w-full flex p-3 px-3 ${
-        active == index ? " bg-[#dfa2a255]" : "bg-transparent"
+      className={`flex w-full cursor-pointer items-center gap-3 border-b border-[#f0f2ef] px-5 py-4 transition hover:bg-[#f6f8f5] ${
+        active === index ? " bg-[#edf3ed]" : "bg-white"
       } cursor-pointer`}
       onClick={() => {
         setActive(index) ||
@@ -276,7 +274,7 @@ const MessageList = ({
     >
       <div className="relative">
         <img
-          className="w-[50px] h-[50px] rounded-full "
+          className="h-12 w-12 rounded-full border border-[#e6ebe4] object-cover"
           src={`${user?.avatar?.url}`}
         />
         {online ? (
@@ -286,8 +284,8 @@ const MessageList = ({
         )}
       </div>
       <div className="pl-3">
-        <h1 className=" text-[18px]">{user?.name}</h1>
-        <p className="text-[16px] text-[#000c]">
+        <h1 className="text-sm font-bold text-[#344238]">{user?.name}</h1>
+        <p className="mt-1 line-clamp-1 text-xs text-[#879188]">
           <span>
             {item?.lastMessageId !== user?._id
               ? "YOU: "
@@ -313,19 +311,19 @@ const SellerInbox = ({
 }) => {
   return (
     <div
-      className="w-full min-h-screen flex flex-col justify-between"
+      className="flex h-full min-h-0 flex-col"
       ref={scrollRef}
     >
       {/* Message Header */}
-      <div className="w-full flex items-center justify-between p-3 bg-slate-200">
+      <div className="flex w-full items-center justify-between border-b border-[#edf0ec] bg-white p-4 sm:p-5">
         <div className="flex">
           <img
             alt="User Avatar"
-            className="w-[60px] h-[60px] rounded-full"
+            className="h-11 w-11 rounded-full object-cover"
             src={`${userData?.avatar?.url}`}
           />
           <div className="pl-3">
-            <h1 className="text-[18px] font-[600]">{userData?.name}</h1>
+            <h1 className="text-sm font-bold text-[#344238]">{userData?.name}</h1>
             <h1 className="">{activestatus ? "Active Now" : null}</h1>
           </div>
         </div>
@@ -336,7 +334,7 @@ const SellerInbox = ({
         />
       </div>
       {/* Messages Map */}
-      <div className="px-3 h-[65vh] py-3 overflow-y-scroll">
+      <div className="min-h-0 flex-1 overflow-y-auto bg-[#f8faf7] px-4 py-5 sm:px-6">
         {messages &&
           messages.map((item, index) => {
             return (
@@ -350,13 +348,13 @@ const SellerInbox = ({
                   <img
                     src={`${userData?.avatar?.url}`}
                     alt="sender-image"
-                    className="w-[40px] h-[40px] rounded-full mr-3"
+                    className="mr-3 h-9 w-9 rounded-full object-cover"
                   />
                 )}
                 {item.images && (
                   <img
                     src={`${item.images?.url}`}
-                    className="w-[300px] h-[300px] object-cover rounded-[10px] mr-2"
+                    className="mr-2 max-h-72 max-w-[75%] rounded-xl object-cover"
                   />
                 )}
 
@@ -364,7 +362,7 @@ const SellerInbox = ({
                   <div>
                     <div
                       className={`w-max p-2 rounded ${
-                        item.sender === sellerId ? "bg-[#000]" : "bg-[#38c776]"
+                        item.sender === sellerId ? "bg-[#315c46]" : "bg-white text-[#344238] border border-[#e6ebe4]"
                       } text-[#fff] h-min`}
                     >
                       <p>{item?.text}</p>
@@ -385,10 +383,10 @@ const SellerInbox = ({
       {/* Send Message Input */}
       <form
         aria-required={true}
-        className="p-3 relative w-full flex justify-between items-center"
+        className="relative flex w-full items-center gap-3 border-t border-[#edf0ec] bg-white p-4"
         onSubmit={sendMessageHandler}
       >
-        <div className="w-[3%]">
+        <div className="shrink-0">
           <input
             type="file"
             name=""
@@ -400,9 +398,9 @@ const SellerInbox = ({
             <TfiGallery size={20} className="cursor-pointer" />
           </label>
         </div>
-        <div className="w-[97%]">
+        <div className="relative min-w-0 flex-1">
           <input
-            className={`${styles.input}`}
+            className="w-full rounded-xl border border-[#e2e9e1] bg-[#f8faf7] px-4 py-3 pr-12 text-sm text-[#344238] outline-none focus:border-[#789581] focus:ring-4 focus:ring-[#edf3ed]"
             type="text"
             placeholder="Enter Your Message"
             value={newmessage}
@@ -418,7 +416,7 @@ const SellerInbox = ({
           <label htmlFor="send">
             <AiOutlineSend
               size={20}
-              className="absolute right-4 top-5 cursor-pointer"
+              className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer text-[#315c46]"
             />
           </label>
         </div>

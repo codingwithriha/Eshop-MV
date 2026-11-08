@@ -7,7 +7,7 @@ const AdminDashboardPage = () => {
     <div>
       <AdminHeader />
       <div className="w-full flex">
-        <div className="800px:w-[330px] w-[80px]">
+        <div className="w-[80px] shrink-0 800px:w-[330px]">
           <AdminSidebar active={1} />
         </div>
         <AdminDashBoardMain />

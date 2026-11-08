@@ -1,143 +1,25 @@
-import React, { useState } from "react";
-import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-import styles from "../../styles/styles";
-import { Link, useNavigate } from "react-router-dom";
+import React,{useState} from "react";
+import {AiOutlineEye,AiOutlineEyeInvisible} from "react-icons/ai";
+import {Link,useNavigate} from "react-router-dom";
 import axios from "axios";
-import { server } from "../../server";
-import { toast } from "react-toastify";
+import {server} from "../../server";
+import {toast} from "react-toastify";
+import {FiArrowLeft,FiArrowRight,FiLock,FiMail,FiShoppingBag,FiPackage,FiTrendingUp} from "react-icons/fi";
 
-const ShopLogin = () => {
-  const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [visible, setVisible] = useState(false);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    await axios
-      .post(
-        `${server}/shop/login-shop`,
-        {
-          email,
-          password,
-        },
-        { withCredentials: true }
-      )
-      .then((res) => {
-        toast.success("Login Success!");
-        navigate("/dashboard");
-        window.location.reload(true); 
-      })
-      .catch((err) => {
-        toast.error(err.response.data.message);
-      });
-  };
-
-  return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          Login to your shop
-        </h2>
-      </div>
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-          <form className="space-y-6" onSubmit={handleSubmit}>
-            <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Email address
-              </label>
-              <div className="mt-1">
-                <input
-                  type="email"
-                  name="email"
-                  autoComplete="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                />
-              </div>
-            </div>
-            <div>
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Password
-              </label>
-              <div className="mt-1 relative">
-                <input
-                  type={visible ? "text" : "password"}
-                  name="password"
-                  autoComplete="current-password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                />
-                {visible ? (
-                  <AiOutlineEye
-                    className="absolute right-2 top-2 cursor-pointer"
-                    size={25}
-                    onClick={() => setVisible(false)}
-                  />
-                ) : (
-                  <AiOutlineEyeInvisible
-                    className="absolute right-2 top-2 cursor-pointer"
-                    size={25}
-                    onClick={() => setVisible(true)}
-                  />
-                )}
-              </div>
-            </div>
-            <div className={`${styles.normalFlex} justify-between`}>
-              <div className={`${styles.normalFlex}`}>
-                <input
-                  type="checkbox"
-                  name="remember-me"
-                  id="remember-me"
-                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                />
-                <label
-                  htmlFor="remember-me"
-                  className="ml-2 block text-sm text-gray-900"
-                >
-                  Remember me
-                </label>
-              </div>
-              <div className="text-sm">
-                <a
-                  href=".forgot-password"
-                  className="font-medium text-blue-600 hover:text-blue-500"
-                >
-                  Forgot your password?
-                </a>
-              </div>
-            </div>
-            <div>
-              <button
-                type="submit"
-                className="group relative w-full h-[40px] flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
-              >
-                Submit
-              </button>
-            </div>
-            <div className={`${styles.normalFlex} w-full`}>
-              <h4>Not have any account?</h4>
-              <Link to="/shop-create" className="text-blue-600 pl-2">
-                Sign Up
-              </Link>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-  );
+const ShopLogin=()=>{
+ const navigate=useNavigate();const [email,setEmail]=useState("");const [password,setPassword]=useState("");const [visible,setVisible]=useState(false);const [loading,setLoading]=useState(false);
+ const handleSubmit=async(e)=>{e.preventDefault();if(loading)return;setLoading(true);try{await axios.post(`${server}/shop/login-shop`,{email,password},{withCredentials:true});toast.success("Welcome to your seller studio.");navigate("/dashboard");window.location.reload();}catch(error){toast.error(error.response?.data?.message||"Unable to sign in. Check your details and try again.");}finally{setLoading(false);}};
+ const field="mt-2 h-12 w-full rounded-xl border border-[#e2e8e0] bg-[#fbfcfa] px-4 text-sm text-[#26352b] outline-none transition placeholder:text-[#a0aaa2] focus:border-[#315c46] focus:bg-white focus:ring-4 focus:ring-[#315c46]/[.07]";
+ return <main className="min-h-screen bg-[#f5f7f3] px-4 py-8 sm:px-6 sm:py-12"><div className="mx-auto max-w-5xl"><Link to="/" className="inline-flex items-center gap-2 text-xs font-bold text-[#718076] hover:text-[#315c46]"><FiArrowLeft/> Back to marketplace</Link>
+  <div className="mt-6 grid overflow-hidden rounded-[28px] border border-[#e5ebe3] bg-white shadow-[0_24px_80px_rgba(32,41,35,.08)] lg:grid-cols-[.9fr_1.1fr]">
+   <section className="relative flex min-h-[330px] flex-col justify-between overflow-hidden bg-[#20372a] p-8 text-white sm:p-10 lg:min-h-[600px] lg:p-12"><div className="absolute -right-24 -top-20 h-72 w-72 rounded-full border border-white/10"/><div className="relative"><span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#d9bd91] text-[#26372d]"><FiShoppingBag size={22}/></span><p className="mt-12 text-[10px] font-extrabold uppercase tracking-[.2em] text-[#d9bd91]">Seller studio</p><h1 className="mt-4 max-w-sm font-display text-4xl font-extrabold leading-[1.08] tracking-[-.05em] sm:text-5xl">Your business, in good hands.</h1><p className="mt-5 max-w-sm text-sm leading-7 text-white/65">Sign in to manage your storefront, fulfil orders and grow your presence on Eshop.</p></div><div className="relative mt-10 space-y-4">{[[FiPackage,"Manage your products and orders"],[FiTrendingUp,"Keep an eye on your shop activity"]].map(([Icon,label])=><div key={label} className="flex items-center gap-3 text-sm text-white/80"><Icon className="text-[#d9bd91]"/>{label}</div>)}</div></section>
+   <section className="flex items-center p-6 sm:p-10 lg:p-14"><div className="mx-auto w-full max-w-md"><span className="text-[10px] font-extrabold uppercase tracking-[.18em] text-[#66806e]">Welcome back</span><h2 className="mt-2 font-display text-3xl font-extrabold tracking-[-.04em] text-[#202923]">Sign in to your shop</h2><p className="mt-2 text-sm leading-6 text-[#7b867e]">Use the email and password linked to your seller account.</p>
+    <form className="mt-8 space-y-5" onSubmit={handleSubmit}><div><label htmlFor="seller-email" className="text-xs font-bold text-[#455349]">Shop email</label><div className="relative"><FiMail className="absolute left-4 top-[26px] text-[#8b998e]"/><input id="seller-email" type="email" autoComplete="email" required value={email} onChange={e=>setEmail(e.target.value)} placeholder="you@yourstore.com" className={field+" pl-11"}/></div></div>
+     <div><label htmlFor="seller-password" className="text-xs font-bold text-[#455349]">Password</label><div className="relative"><FiLock className="absolute left-4 top-[26px] text-[#8b998e]"/><input id="seller-password" type={visible?"text":"password"} autoComplete="current-password" required value={password} onChange={e=>setPassword(e.target.value)} placeholder="Enter your password" className={field+" pl-11 pr-12"}/><button type="button" aria-label={visible?"Hide password":"Show password"} onClick={()=>setVisible(!visible)} className="absolute right-4 top-[25px] text-[#819087]">{visible?<AiOutlineEye size={19}/>:<AiOutlineEyeInvisible size={19}/>}</button></div></div>
+     <button disabled={loading} className="inline-flex h-[52px] w-full items-center justify-center gap-2 rounded-full bg-[#315c46] px-6 text-sm font-bold text-white shadow-[0_10px_24px_rgba(49,92,70,.18)] transition hover:-translate-y-0.5 hover:bg-[#244735] disabled:opacity-60">{loading?"Signing you in…":"Sign in to seller studio"}<FiArrowRight/></button>
+    </form><p className="mt-7 text-center text-sm text-[#7b867e]">New seller? <Link to="/shop-create" className="font-bold text-[#315c46] hover:text-[#244735]">Create your shop</Link></p><div className="mt-8 border-t border-[#edf0eb] pt-6 text-center"><Link to="/login" className="text-xs font-semibold text-[#7b867e] hover:text-[#315c46]">Looking to shop instead? Sign in as a customer</Link></div>
+   </div></section>
+  </div>
+ </div></main>;
 };
-
 export default ShopLogin;

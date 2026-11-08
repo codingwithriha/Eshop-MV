@@ -39,7 +39,7 @@ const Header = ({ activeHeading }) => {
     const filterProductData =
       allProducts &&
       allProducts.filter((product) =>
-        product.name.toLowerCase().includes(term.toLowerCase())
+        product?.name?.toLowerCase().includes(term.toLowerCase())
       );
     setSearchData(filterProductData);
   };
@@ -65,11 +65,10 @@ const Header = ({ activeHeading }) => {
         <div className="hidden 800px:h-[60px] 800px:my-[20px] 800px:flex items-center justify-between">
           <div>
             <Link to="/">
-              <img
-                src="https://shopo.quomodothemes.website/assets/images/logo.svg"
-                alt="home-logo"
-                className="h-[45px] cursor-pointer hover:scale-105 transition-transform"
-              />
+              <span className="inline-flex items-center gap-3 transition-transform hover:scale-[1.02]">
+                <span className="flex h-11 w-11 items-center justify-center rounded-[14px] bg-[#315c46] text-xl font-black text-white shadow-sm">E</span>
+                <span className="flex flex-col leading-none"><span className="font-display text-[25px] font-extrabold tracking-tight text-[#26372d]">eshop<span className="text-[#bd9664]">.</span></span><span className="mt-1 text-[9px] font-bold uppercase tracking-[.22em] text-[#819087]">Marketplace</span></span>
+              </span>
             </Link>
           </div>
           {/* Search Box Working */}
@@ -80,7 +79,7 @@ const Header = ({ activeHeading }) => {
                 placeholder="Search products..."
                 value={searchTerm}
                 onChange={handleSearchChange}
-                className="h-[45px] w-full px-4 pl-12 border-2 border-gray-200 rounded-full focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
+                className="h-[45px] w-full px-4 pl-12 border border-[#e1e8df] rounded-full focus:outline-none focus:border-[#315c46] focus:ring-2 focus:ring-[#315c46]/10 transition-all"
               />
               <AiOutlineSearch
                 size={20}
@@ -99,7 +98,7 @@ const Header = ({ activeHeading }) => {
                       >
                         <div className="w-full flex items-center py-3 hover:bg-gray-50 rounded-lg px-2 transition-colors">
                           <img
-                            src={i.images[0].url}
+                            src={i.images?.[0]?.url || "https://placehold.co/100x100/f0f3ee/718176?text=Item"}
                             className="w-[50px] h-[50px] rounded-lg object-cover mr-4"
                             alt={i.name}
                           />
@@ -113,12 +112,10 @@ const Header = ({ activeHeading }) => {
             {/* ending searchBox styling */}
           </div>
           {/* Styling for seller button */}
-          <div className={`${styles.button} !bg-gradient-to-r !from-blue-600 !to-purple-600 !rounded-full !h-[45px] !px-6 hover:shadow-lg hover:shadow-blue-500/30 transition-all`}>
-            <Link to={`${isSeller ? "/dashboard" : "/shop-create"}`}>
-              <h1 className="text-white flex items-center font-semibold">
-                {isSeller ? "DASHBOARD" : "CREATE SHOP"}
-                <IoIosArrowForward className="ml-2" />
-              </h1>
+          <div className="group">
+            <Link to={`${isSeller ? "/dashboard" : "/shop-create"}`} className="inline-flex h-[46px] items-center gap-3 rounded-full bg-[#315c46] px-6 text-xs font-extrabold tracking-[.08em] text-white shadow-[0_8px_20px_rgba(49,92,70,.16)] transition duration-200 hover:-translate-y-0.5 hover:bg-[#244735] hover:shadow-[0_12px_26px_rgba(49,92,70,.22)]">
+              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white/15"><IoIosArrowForward /></span>
+              {isSeller ? "SELLER DASHBOARD" : "OPEN YOUR SHOP"}
             </Link>
           </div>
           {/* ending styling for selling button */}
@@ -127,8 +124,8 @@ const Header = ({ activeHeading }) => {
       {/* styling for fixed navbar  only for big screen*/}
       <div
         className={`${
-          active === true ? "shadow-xl fixed top-0 left-0 z-50 bg-white/95 backdrop-blur-md" : null
-        } transition-all duration-300 hidden 800px:flex items-center justify-between w-full bg-gradient-to-r from-blue-700 to-purple-700 h-[70px]`}
+          active === true ? "shadow-lg fixed top-0 left-0 z-50 bg-[#315c46]/95 backdrop-blur-md" : null
+        } transition-all duration-300 hidden 800px:flex items-center justify-between w-full bg-[#315c46] h-[70px]`}
       >
         <div
           className={`${styles.section} ${styles.normalFlex} relative justify-between`}
@@ -239,11 +236,7 @@ const Header = ({ activeHeading }) => {
           </div>
           <div>
             <Link to="/">
-              <img
-                src="https://shopo.quomodothemes.website/assets/images/logo.svg"
-                alt="home-logo"
-                className="mt-3 cursor-pointer"
-              />
+              <span className="mt-2 inline-flex items-center gap-2"><span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#315c46] text-lg font-black text-white">E</span><span className="font-display text-xl font-extrabold text-[#26372d]">eshop<span className="text-[#bd9664]">.</span></span></span>
             </Link>
           </div>
           <div>
@@ -314,14 +307,7 @@ const Header = ({ activeHeading }) => {
                 )}
               </div>
               <Navbar active={activeHeading} />
-              <div className={`${styles.button} ml-4 !rounded-[4px]`}>
-                <Link to={`${isSeller ? "/dashboard" : "/shop-create"}`}>
-                  <h1 className="text-white flex items-center">
-                    {isSeller ? "DASHBOARD" : "CREATE SHOP"}
-                    <IoIosArrowForward className="ml-1" />
-                  </h1>
-                </Link>
-              </div>
+              <div className="mx-4 mt-6"><Link to={`${isSeller ? "/dashboard" : "/shop-create"}`} className="flex min-h-[48px] items-center justify-center gap-2 rounded-full bg-[#315c46] px-5 text-xs font-extrabold tracking-wide text-white transition hover:bg-[#244735]">{isSeller ? "SELLER DASHBOARD" : "OPEN YOUR SHOP"}<IoIosArrowForward /></Link></div>
               <br />
               <br />
               <br />

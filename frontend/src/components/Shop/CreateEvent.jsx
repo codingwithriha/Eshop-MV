@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { categoriesData } from "../../static/data";
-import { AiOutlinePlusCircle } from "react-icons/ai";
-import { toast } from "react-toastify";
 import { createevent, getAllEventsShop } from "../../redux/actions/event";
+import { toast } from "react-toastify";
+import { FiCalendar, FiUploadCloud, FiX, FiArrowLeft, FiTag } from "react-icons/fi";
+
+const field = "mt-2 w-full rounded-xl border border-[#e2e9e1] bg-white px-4 py-3 text-sm text-[#344238] outline-none transition placeholder:text-[#a0aaa3] focus:border-[#789581] focus:ring-4 focus:ring-[#edf3ed]";
+const Label = ({ children }) => <label className="block text-xs font-bold text-[#536157]">{children}</label>;
+
 const CreateEvent = () => {
   const { success, error } = useSelector((state) => state.events);
   const { seller } = useSelector((state) => state.seller);
@@ -15,272 +19,80 @@ const CreateEvent = () => {
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
   const [tags, setTags] = useState("");
-  const [originalPrice, setOriginalPrice] = useState();
-  const [discountPrice, setDiscountPrice] = useState();
-  const [stock, setStock] = useState();
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setendDate] = useState(null);
-  // Start Date Change Handler
-  const handleStartDateChange = (e) => {
-    const startDate = new Date(e.target.value);
-    const minEndDate = new Date(startDate.getTime() + 3 * 24 * 60 * 60 * 1000);
-    setStartDate(startDate);
-    setendDate(null);
-    document.getElementById("end-date").min = minEndDate.toISOString().slice(
-      0,
-      10
-    );
-  };
-  //Handle End Date Change
-  const handleEndDateChange = (e) => {
-    const endDate = new Date(e.target.value);
-    setendDate(endDate);
+  const [originalPrice, setOriginalPrice] = useState("");
+  const [discountPrice, setDiscountPrice] = useState("");
+  const [stock, setStock] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+
+  useEffect(() => {
+    if (error) { toast.error(error); dispatch({ type: "clearErrors" }); }
+    if (success) {
+      toast.success("Event product created successfully.");
+      dispatch(getAllEventsShop(seller?._id));
+      navigate("/dashboard-events");
+    }
+  }, [dispatch, error, success, navigate, seller?._id]);
+
+  const handleImageChange = (event) => {
+    const files = Array.from(event.target.files || []);
+    if (!files.length) return;
+    Promise.all(files.map((file) => new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    }))).then((results) => setImages((current) => [...current, ...results]))
+      .catch(() => toast.error("Unable to read one of the selected images."));
+    event.target.value = "";
   };
 
   const today = new Date().toISOString().slice(0, 10);
-  //this is simply a ternary operator
-  const minEndDate = startDate
-    ? new Date(startDate.getTime() + 3 * 24 * 60 * 60 * 1000)
-        .toISOString()
-        .slice(0, 10)
-    : "";
+  const minEndDate = startDate ? new Date(new Date(startDate).getTime() + 3 * 86400000).toISOString().slice(0, 10) : "";
 
-  useEffect(() => {
-    if (error) {
-      toast.error(error);
-      dispatch({ type: "clearErrors" });
-    }
-    if (success) {
-      toast.success("Event Product Created Successfully!");
-      dispatch(getAllEventsShop(seller?._id));
-      setImages([]);
-      setName("");
-      setDescription("");
-      setCategory("");
-      setTags("");
-      setOriginalPrice("");
-      setDiscountPrice("");
-      setStock("");
-      setStartDate("");
-      setendDate("");
-      navigate("/dashboard");
-     
-    }
-  }, [dispatch, error, success, navigate, seller?._id]);
-  // Image Change Handler
-  const handleImageChange = (e) => {
-    const files = Array.from(e.target.files);
-    setImages([]);
-    files.forEach((file) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        if (reader.readyState === 2) {
-          setImages((old) => [...old, reader.result]);
-        }
-      };
-      reader.readAsDataURL(file);
-    });
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (!seller?._id) return toast.error("Seller account is not ready. Please sign in again.");
+    if (!images.length) return toast.error("Please upload at least one event image.");
+    if (!startDate || !endDate) return toast.error("Please select both event dates.");
+    dispatch(createevent({
+      name, description, category, tags, originalPrice, discountPrice, stock, images,
+      shopId: seller._id,
+      start_Date: new Date(startDate).toISOString(),
+      Finish_Date: new Date(endDate).toISOString(),
+    }));
   };
-  // Form Submission Form
-  const HandleSubmit = (e) => {
-    e.preventDefault();
-    const newForm = new FormData();
-    images.forEach((image) => {
-      newForm.append("images", image);
-    });
-    const data = {
-      name,
-      description,
-      category,
-      tags,
-      originalPrice,
-      discountPrice,
-      stock,
-      images,
-      shopId: seller?._id,
-      start_Date: startDate?.toISOString(),
-      Finish_Date: endDate?.toISOString(),
-    };
-    dispatch(createevent(data));
- 
-  };
+
   return (
-    <div className="w-[90%] 800px:w-[50%] bg-white  shadow h-[80vh] rounded-[4px] p-3 overflow-y-scroll">
-      <h5 className="text-[30px] font-Poppins text-center">Create Event </h5>
-      {/* Event  Create Form  */}
-      <form onSubmit={HandleSubmit}>
-        <br />
-        <div>
-          <label className="pb-2">
-            Name <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="text"
-            name="name"
-            value={name}
-            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm capitalize"
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Enter Your Event Product Name "
-          />
+    <div className="min-h-[calc(100vh-76px)] bg-[#f6f8f5] px-4 py-7 sm:px-7 lg:px-9">
+      <div className="mx-auto max-w-5xl">
+        <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+          <div><p className="text-[10px] font-extrabold uppercase tracking-[.18em] text-[#8a988d]">Marketing · Campaigns</p><h1 className="mt-2 font-display text-2xl font-extrabold text-[#26372d] sm:text-3xl">Create an event</h1><p className="mt-2 text-sm text-[#78857b]">Set up a limited-time offer and schedule when customers can shop it.</p></div>
+          <Link to="/dashboard-events" className="inline-flex items-center gap-2 rounded-xl border border-[#e1e8df] bg-white px-4 py-2.5 text-xs font-bold text-[#536157] hover:bg-[#f1f5f0]"><FiArrowLeft/> Back to events</Link>
         </div>
-        <br />
-        <div>
-          <label className="pb-2">
-            Description <span className="text-red-500">*</span>
-          </label>
-          <textarea
-            cols="30"
-            required
-            rows="8"
-            type="text"
-            name="description"
-            value={description}
-            className="mt-2 appearance-none block w-full pt-2 px-3 border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm capitalize"
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Enter your Event Product description"
-          ></textarea>
-        </div>
-        <br />
-        <div>
-          <label className="pb-2">
-            Category <span className="text-red-500">*</span>
-          </label>
-          <select
-            className="w-full mt-2 border h-[35px] rounded-[5px] capitalize
-              "
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-          >
-            <option value="Choose a category">Choose a category</option>
-            {categoriesData &&
-              categoriesData.map((i) => (
-                <option value={i.title} key={i.title}>
-                  {i.title}
-                </option>
-              ))}
-          </select>
-        </div>
-        <br />
-        <div>
-          <label className="pb-2">Tags</label>
-          <input
-            type="text"
-            name="tags"
-            value={tags}
-            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm capitalize"
-            onChange={(e) => setTags(e.target.value)}
-            placeholder="Enter Your Event Product Tags"
-          />
-        </div>
-        <br />
-        <div>
-          <label className="pb-2">Original Price</label>
-          <input
-            type="number"
-            name="price"
-            value={originalPrice}
-            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm capitalize"
-            onChange={(e) => setOriginalPrice(e.target.value)}
-            placeholder="Enter your Event Product price"
-          />
-        </div>
-        <br />
-        <div>
-          <label className="pb-2">
-            Price (With Discount) <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="number"
-            name="price"
-            value={discountPrice}
-            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-            onChange={(e) => setDiscountPrice(e.target.value)}
-            placeholder="Enter your Event Product price with discount..."
-          />
-        </div>
-        <br />
-        <div>
-          <label className="pb-2">
-            Event Product Stock <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="number"
-            name="price"
-            value={stock}
-            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-            onChange={(e) => setStock(e.target.value)}
-            placeholder="Enter Your Event Product Stock..."
-          />
-        </div>
-        <br />
-        <div>
-          <label className="pb-2">
-            Event StartDate <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="date"
-            id="start-date"
-            name="price"
-            value={startDate ? startDate.toISOString().slice(0, 10) : ""}
-            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-            onChange={handleStartDateChange}
-            min={today}
-            placeholder="Enter your product stock..."
-          />
-        </div>
-        <br />
-        <div>
-          <label className="pb-2">
-            Event EndDate <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="date"
-            id="end-date"
-            name="price"
-            value={endDate ? endDate.toISOString().slice(0, 10) : ""}
-            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-            onChange={handleEndDateChange}
-            min={minEndDate}
-            placeholder="Enter your product stock..."
-          />
-        </div>
-        <br />
-        <div>
-          <label className="pb-2">
-            Upload Images <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="file"
-            name=""
-            id="upload"
-            className="hidden"
-            multiple
-            onChange={handleImageChange}
-          />
-          <div className="w-full flex items-center flex-wrap">
-            <label htmlFor="upload">
-              <AiOutlinePlusCircle size={30} className="mt-3" color="#555" />
-            </label>
-            {images &&
-              images.map((i) => (
-                <img
-                  src={i}
-                  key={i}
-                  alt=""
-                  className="h-[120px] w-[120px] object-cover m-2"
-                />
-              ))}
+        <form onSubmit={handleSubmit} className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_300px]">
+          <div className="space-y-5">
+            <section className="rounded-2xl border border-[#e6ebe4] bg-white p-5 shadow-[0_5px_24px_rgba(35,52,40,.04)] sm:p-7">
+              <div className="mb-5 flex items-center gap-3"><span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#edf3ed] text-[#315c46]"><FiCalendar size={19}/></span><div><h2 className="text-base font-bold text-[#29372e]">Event details</h2><p className="text-xs text-[#879188]">Name, description and category</p></div></div>
+              <div className="space-y-5"><div><Label>Event product name <span className="text-red-500">*</span></Label><input required value={name} onChange={(e) => setName(e.target.value)} className={field} placeholder="e.g. Summer essentials sale"/></div><div><Label>Description <span className="text-red-500">*</span></Label><textarea required rows={5} value={description} onChange={(e) => setDescription(e.target.value)} className={field + " resize-y"} placeholder="Describe the offer and featured product."/></div><div className="grid gap-4 sm:grid-cols-2"><div><Label>Category <span className="text-red-500">*</span></Label><select required value={category} onChange={(e) => setCategory(e.target.value)} className={field}><option value="">Choose a category</option>{categoriesData?.map((item) => <option key={item.title} value={item.title}>{item.title}</option>)}</select></div><div><Label>Tags</Label><input value={tags} onChange={(e) => setTags(e.target.value)} className={field} placeholder="sale, seasonal, limited"/></div></div></div>
+            </section>
+            <section className="rounded-2xl border border-[#e6ebe4] bg-white p-5 shadow-[0_5px_24px_rgba(35,52,40,.04)] sm:p-7">
+              <h2 className="text-base font-bold text-[#29372e]">Pricing and event dates</h2><p className="mb-5 mt-1 text-xs text-[#879188]">Choose the event price, inventory and schedule.</p>
+              <div className="grid gap-4 sm:grid-cols-3"><div><Label>Original price</Label><input type="number" min="0" step="0.01" value={originalPrice} onChange={(e) => setOriginalPrice(e.target.value)} className={field} placeholder="0.00"/></div><div><Label>Sale price <span className="text-red-500">*</span></Label><input required type="number" min="0" step="0.01" value={discountPrice} onChange={(e) => setDiscountPrice(e.target.value)} className={field} placeholder="0.00"/></div><div><Label>Stock quantity <span className="text-red-500">*</span></Label><input required type="number" min="0" value={stock} onChange={(e) => setStock(e.target.value)} className={field} placeholder="0"/></div></div>
+              <div className="mt-5 grid gap-4 sm:grid-cols-2"><div><Label>Event start date <span className="text-red-500">*</span></Label><input required type="date" min={today} value={startDate} onChange={(e) => setStartDate(e.target.value)} className={field}/></div><div><Label>Event end date <span className="text-red-500">*</span></Label><input required type="date" min={minEndDate || today} value={endDate} onChange={(e) => setEndDate(e.target.value)} className={field}/><p className="mt-1.5 text-[10px] text-[#9aa49c]">The existing event rule requires at least 3 days.</p></div></div>
+            </section>
           </div>
-          <br />
-          <div>
-            <input
-              type="submit"
-              value="Create"
-              className="mt-2 cursor-pointer appearance-none text-center block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none  hover:opacity-85 focus:ring-blue-500 bg-slate-800 focus:border-blue-500 sm:text-sm capitalize text-[#fff] "
-            />
-          </div>
-        </div>
-      </form>
+          <aside className="space-y-5">
+            <section className="rounded-2xl border border-[#e6ebe4] bg-white p-5 shadow-[0_5px_24px_rgba(35,52,40,.04)]">
+              <div className="flex items-center gap-2"><FiTag className="text-[#52765d]"/><h2 className="text-base font-bold text-[#29372e]">Event images</h2></div><p className="mb-4 mt-1 text-xs leading-5 text-[#879188]">Upload clear images for your promotion.</p>
+              <label className="flex min-h-[150px] cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-[#dce6da] bg-[#f8faf7] p-5 text-center transition hover:border-[#8ca58f] hover:bg-[#f1f6f0]"><FiUploadCloud size={28} className="text-[#52765d]"/><span className="mt-3 text-xs font-bold text-[#405448]">Choose images</span><span className="mt-1 text-[10px] text-[#929d94]">Select one or more image files</span><input type="file" accept="image/*" multiple className="hidden" onChange={handleImageChange}/></label>
+              {images.length > 0 && <div className="mt-4 grid grid-cols-3 gap-2">{images.map((image, index) => <div key={image} className="group relative aspect-square overflow-hidden rounded-lg bg-[#f1f4f0]"><img src={image} alt={"Event preview " + (index + 1)} className="h-full w-full object-cover"/><button type="button" onClick={() => setImages((current) => current.filter((_, i) => i !== index))} className="absolute right-1 top-1 rounded-full bg-white/90 p-1.5 text-[#a45e52] shadow"><FiX size={13}/></button></div>)}</div>}
+              <p className="mt-3 text-[10px] text-[#9aa49c]">{images.length} image{images.length === 1 ? "" : "s"} selected</p>
+            </section>
+            <div className="rounded-2xl bg-[#315c46] p-5 text-white"><p className="text-sm font-bold">Ready to launch?</p><p className="mt-1 text-xs leading-5 text-white/70">Review the dates, price and images before creating your event.</p><button type="submit" className="mt-5 w-full rounded-xl bg-white px-4 py-3 text-sm font-extrabold text-[#315c46] transition hover:bg-[#edf3ed]">Create event</button></div>
+          </aside>
+        </form>
+      </div>
     </div>
   );
 };

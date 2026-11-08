@@ -105,7 +105,7 @@ const Checkout = () => {
   };
 
   return (
-    <div className="w-full flex flex-col items-center py-8">
+    <div className="w-full flex flex-col items-center bg-[#f7f8f5] py-10">
       <div className="w-[90%] 1000px:w-[70%] block 800px:flex">
         <div className="w-full 800px:w-[65%]">
           <ShippingInfo
@@ -162,7 +162,7 @@ const ShippingInfo = ({
   setZipCode,
 }) => {
   return (
-    <div className="w-full 800px:w-[95%] bg-white rounded-md p-5 pb-8">
+    <div className="w-full 800px:w-[95%] bg-white border border-[#e7ebe5] rounded-2xl p-6 pb-8 shadow-sm">
       <h5 className="text-[18px] font-[500]">Shipping Address</h5>
       <br />
       <form>

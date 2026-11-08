@@ -1,88 +1,13 @@
-import React, { useEffect } from "react";
-import AdminSidebar from "../components/Admin/Layout/AdminSideBar";
+import React,{useEffect} from "react";
+import {useDispatch,useSelector} from "react-redux";
+import {getAllOrdersOfAdmin} from "../redux/actions/order";
+import {FiShoppingCart} from "react-icons/fi";
 import AdminHeader from "../components/Layout/AdminHeader";
-import { DataGrid } from "@mui/x-data-grid";
-import { AiOutlineArrowRight } from "react-icons/ai";
-import { getAllOrdersOfAdmin } from "../redux/actions/order";
-import { getAllSellers } from "../redux/actions/seller";
-import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-import { Button } from "@mui/material";
-const AdminDashboardOrders = () => {
-  const dispatch = useDispatch();
-  const { adminOrders } = useSelector((state) => state.order);
-  useEffect(() => {
-    dispatch(getAllOrdersOfAdmin());
-    dispatch(getAllSellers());
-  }, [dispatch]);
-  const columns = [
-    { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
-
-    {
-      field: "status",
-      headerName: "Status",
-      minWidth: 130,
-      flex: 0.7,
-      cellClassName: (params) => {
-        return params.row.status === "Delivered" ? "greenColor" : "redColor";
-      },
-    },
-    {
-      field: "itemsQty",
-      headerName: "Items Qty",
-      type: "number",
-      minWidth: 130,
-      flex: 0.7,
-    },
-
-    {
-      field: "total",
-      headerName: "Total",
-      type: "number",
-      minWidth: 130,
-      flex: 0.8,
-    },
-    {
-      field: "createdAt",
-      headerName: "Order Date",
-      type: "number",
-      minWidth: 130,
-      flex: 0.8,
-    },
-  ];
-  const row = [];
-  adminOrders &&
-    adminOrders.forEach((item) => {
-      row.push({
-        id: item._id,
-        itemsQty: item?.cart.reduce((acc, item) => acc + item?.qty, 0),
-        total: `$${item.totalPrice}`,
-        status: item.status,
-        createdAt: item?.createdAt.slice(0, 10),
-      });
-    });
-
-  return (
-    <div>
-      <AdminHeader />
-      <div className="w-full flex">
-        <div className="800px:w-[330px] w-[80px]">
-          <AdminSidebar active={2} />
-        </div>
-        <div className="w-full min-h-[45vh] bg-white rounded">
-          <div className="w-[97%] flex justify-center">
-            <DataGrid
-              rows={row}
-              columns={columns}
-              pageSize={4}
-              disableSelectionOnClick
-              autoHeight
-            />
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
+import AdminSidebar from "../components/Admin/Layout/AdminSideBar";
+import AdminPageFrame from "../components/Admin/AdminPageFrame";
+import AdminDataTable from "../components/Admin/AdminDataTable";
+const AdminDashboardOrders=()=>{const dispatch=useDispatch();const {adminOrders=[]}=useSelector(s=>s.order);useEffect(()=>{dispatch(getAllOrdersOfAdmin());},[dispatch]);
+const rows=adminOrders.map(o=>({id:o._id,customer:o.user?.name||o.user?.email||"Customer",items:(o.cart||[]).reduce((a,i)=>a+Number(i?.qty||0),0),total:Number(o.totalPrice||0),status:o.status||"Pending",date:o.createdAt?new Date(o.createdAt).toLocaleDateString():"—"}));
+const columns=[{field:"id",headerName:"Order",minWidth:160,flex:1,renderCell:p=><span className="font-bold text-[#344238]">{"#"+String(p.id).slice(-9).toUpperCase()}</span>},{field:"customer",headerName:"Customer",minWidth:150,flex:1},{field:"items",headerName:"Items",minWidth:80},{field:"total",headerName:"Order total",minWidth:110,renderCell:p=><span className="font-bold text-[#315c46]">{"$"+Number(p.value||0).toFixed(2)}</span>},{field:"status",headerName:"Status",minWidth:120,renderCell:p=><span className="rounded-full bg-[#edf3ed] px-3 py-1 text-[10px] font-bold text-[#315c46]">{p.value}</span>},{field:"date",headerName:"Placed",minWidth:110}];
+return <div className="min-h-screen bg-[#f6f8f5]"><AdminHeader/><div className="flex w-full items-start"><aside className="w-[80px] shrink-0 800px:w-[330px]"><AdminSidebar active={2}/></aside><AdminPageFrame title="Orders" description="Track customer orders, order value and fulfilment status." icon={FiShoppingCart} stats={[{label:"Total orders",value:adminOrders.length,note:"All orders in the marketplace"},{label:"Items ordered",value:rows.reduce((a,r)=>a+r.items,0),note:"Combined item quantities"},{label:"Order value",value:"$"+rows.reduce((a,r)=>a+r.total,0).toFixed(2),note:"Sum of recorded order totals"}]}><AdminDataTable rows={rows} columns={columns} searchFields={["id","customer","status"]} emptyTitle="No orders yet"/></AdminPageFrame></div></div>};
 export default AdminDashboardOrders;

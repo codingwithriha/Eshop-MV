@@ -2,7 +2,7 @@ const path = require("path");
 
 // Load env before any module reads process.env
 require("dotenv").config({
-  path: path.join(__dirname, "config/.env"),
+  path: path.join(__dirname, ".env"),
 });
 
 const app = require("./app");
@@ -24,9 +24,14 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// Removed app.listen()
-// Removed PORT
-// Removed server.close()
+// Run a local Express listener during development. Vercel invokes the exported
+// app directly, so do not start a second listener in the serverless runtime.
+if (!process.env.VERCEL) {
+  const PORT = process.env.PORT || 8000;
+  app.listen(PORT, () => {
+    console.log(`Eshop-MV API listening on port ${PORT}`);
+  });
+}
 
 process.on("unhandledRejection", (error) => {
   console.log(`Error: ${error.message}`);
