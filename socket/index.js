@@ -1,14 +1,12 @@
+const path = require("path");
+require("dotenv").config({ path: path.join(__dirname, ".env") });
+
 const socketIO = require("socket.io");
 const http = require("http");
 const express = require("express");
 const cors = require("cors");
 const app = express();
 const server = http.createServer(app);
-const io = socketIO(server);
-
-require("dotenv").config({
-  path: "./.env",
-});
 
 const allowedOrigins = [
   "http://localhost:3000",
@@ -16,21 +14,30 @@ const allowedOrigins = [
   process.env.FRONTEND_URL,
 ].filter(Boolean);
 
+const io = socketIO(server, {
+  cors: {
+    origin: allowedOrigins,
+    methods: ["GET", "POST"],
+    credentials: true,
+  },
+});
+
 app.use(cors({
-  origin: allowedOrigins.length ? allowedOrigins : true,
+  origin: allowedOrigins,
   credentials: true,
 }));
 app.use(express.json());
 
 app.get("/", (req, res) => {
-  res.send("Hello world from socket server!");
+  res.status(200).send("Eshop-MV real-time service is running.");
 });
 
 let users = [];
 
 const addUser = (userId, socketId) => {
-  !users.some((user) => user.userId === userId) &&
-    users.push({ userId, socketId });
+  // Replace any stale connection for this user before registering the new socket.
+  users = users.filter((user) => user.userId !== userId);
+  users.push({ userId, socketId });
 };
 
 const removeUser = (socketId) => {
@@ -41,7 +48,6 @@ const getUser = (receiverId) => {
   return users.find((user) => user.userId === receiverId);
 };
 
-// Define a message object with a seen property
 const createMessage = ({ senderId, receiverId, text, images }) => ({
   senderId,
   receiverId,
@@ -51,72 +57,56 @@ const createMessage = ({ senderId, receiverId, text, images }) => ({
 });
 
 io.on("connection", (socket) => {
-  // when connect
-  console.log(`a user is connected`);
+  console.log("A user connected");
 
-  // take userId and socketId from user
   socket.on("addUser", (userId) => {
+    if (!userId) return;
     addUser(userId, socket.id);
     io.emit("getUsers", users);
   });
 
-  // send and get message
-  const messages = {}; // Object to track messages sent to each user
+  const messages = {};
 
-  socket.on("sendMessage", ({ senderId, receiverId, text, images }) => {
+  socket.on("sendMessage", ({ senderId, receiverId, text, images } = {}) => {
+    if (!senderId || !receiverId) return;
     const message = createMessage({ senderId, receiverId, text, images });
+    if (!messages[receiverId]) messages[receiverId] = [];
+    messages[receiverId].push(message);
 
-    const user = getUser(receiverId);
-
-    // Store the messages in the `messages` object
-    if (!messages[receiverId]) {
-      messages[receiverId] = [message];
-    } else {
-      messages[receiverId].push(message);
-    }
-
-    // send the message to the recevier
-    io.to(user?.socketId).emit("getMessage", message);
+    const recipient = getUser(receiverId);
+    if (recipient) io.to(recipient.socketId).emit("getMessage", message);
   });
 
-  socket.on("messageSeen", ({ senderId, receiverId, messageId }) => {
-    const user = getUser(senderId);
-
-    // update the seen flag for the message
+  socket.on("messageSeen", ({ senderId, receiverId, messageId } = {}) => {
+    const recipient = getUser(senderId);
     if (messages[senderId]) {
       const message = messages[senderId].find(
-        (message) =>
-          message.receiverId === receiverId && message.id === messageId
+        (item) => item.receiverId === receiverId && item.id === messageId
       );
       if (message) {
         message.seen = true;
-
-        // send a message seen event to the sender
-        io.to(user?.socketId).emit("messageSeen", {
-          senderId,
-          receiverId,
-          messageId,
-        });
+        if (recipient) {
+          io.to(recipient.socketId).emit("messageSeen", {
+            senderId,
+            receiverId,
+            messageId,
+          });
+        }
       }
     }
   });
 
-  // update and get last message
-  socket.on("updateLastMessage", ({ lastMessage, lastMessagesId }) => {
-    io.emit("getLastMessage", {
-      lastMessage,
-      lastMessagesId,
-    });
+  socket.on("updateLastMessage", ({ lastMessage, lastMessageId } = {}) => {
+    io.emit("getLastMessage", { lastMessage, lastMessagesId: lastMessageId });
   });
 
-  //when disconnect
   socket.on("disconnect", () => {
-    console.log(`a user disconnected!`);
+    console.log("A user disconnected");
     removeUser(socket.id);
     io.emit("getUsers", users);
   });
 });
 
 server.listen(process.env.PORT || 4000, () => {
-  console.log(`server is running on port ${process.env.PORT || 4000}`);
+  console.log(`Eshop-MV Socket.IO service listening on port ${process.env.PORT || 4000}`);
 });
