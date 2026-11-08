@@ -520,7 +520,7 @@ The UI is built with Create React App and deployed separately from the API and S
 ### Backend service
 - Deploy the `backend` directory as a Node.js service with start command `npm start` and Node.js 22.
 - Configure `FRONTEND_URL` to the exact deployed frontend origin (for example, `https://eshop-mv.vercel.app`, without a trailing slash).
-- Configure the existing secrets in the hosting dashboard only: MongoDB connection string, JWT/cookie secret, Cloudinary credentials, Stripe keys, and email provider credentials. Never commit `.env` files.
+- Configure these backend variables in the hosting dashboard (use the exact names read by the current code): `DB_URL`, `JWT_SECRET_KEY`, `JWT_EXPIRES`, `ACTIVATION_SECRET`, `FRONTEND_URL`, `CLOUDINARY_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`, `STRIPE_SECRET_KEY`, and `STRIPE_API_KEY`. Email delivery currently uses SMTP, so also set `SMTP_HOST`, `SMTP_PORT`, `SMTP_MAIL`, and `SMTP_PASSWORD`. Never commit `.env` files.
 - Confirm `GET /health` returns HTTP 200 and test authentication, product/event image delivery, checkout and order flows against production services.
 
 ### Socket.IO service
