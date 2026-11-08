@@ -15,7 +15,6 @@ import {
   FiClock,
   FiMinus,
   FiPlus,
-  FiShoppingBag,
   FiStar,
   FiTag,
   FiTruck,
